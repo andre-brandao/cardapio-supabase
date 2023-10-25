@@ -14,14 +14,14 @@
 	</Card.Header>
 </Card.Root>
 <a href={`/cardapio`}>
-	<Card.Root class="m-4 bg-transparent text-white">
+	<Card.Root class="m-4 bg-green-800 text-white">
 		<Card.Header class="text-center">
 			<Card.Title>Cardapio</Card.Title>
 		</Card.Header>
 	</Card.Root>
 </a>
 
-<div class="text-center font-bold">Faça seu Pedido:</div>
+<div class="text-center font-bold text-white">Faça seu Pedido em sua comanda:</div>
 {#each clientes as cliente}
 	<a href={`/cliente/${cliente.id}/cardapio`}>
 		<Card.Root class="m-2">

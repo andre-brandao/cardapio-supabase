@@ -33,6 +33,8 @@
 	</a>
 	<!-- content here -->
 {:else}
+<a class="text-white" href="/admin/login">
 	<p>Por favor, faça login</p>
+</a>
 {/if}
 <slot />

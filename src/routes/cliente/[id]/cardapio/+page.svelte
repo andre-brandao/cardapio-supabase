@@ -3,6 +3,7 @@
 
 	import CardProduto from '$lib/cards/CardProduto.svelte';
 	import type { PageData } from './$types';
+	import { page } from '$app/stores';
 
 	export let data: PageData;
 	const produtos = data.produtos;
@@ -18,13 +19,12 @@
 				if (a.nome > b.nome) {
 					return 1;
 				}
-				
+
 				return 0;
 			});
-		}
-	</script>
+	}
+</script>
 
-<a class="text-white" href="/admin/produtos/edit">NOVO produto</a>
 <main class="flex flex-col">
 	<Tabs.Root value={categorias[0]}>
 		<div class="sticky top-0 z-10 p-2 bg-background">
@@ -41,7 +41,7 @@
 			<Tabs.Content value={categoria}>
 				<div class="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
 					{#each produtosFrom(categoria) as produto (produto.id)}
-						<a href="/admin/produtos/edit/{produto.id}">
+						<a href={$page.url + '/pedir'}>
 							<CardProduto {...produto} />
 						</a>
 					{/each}

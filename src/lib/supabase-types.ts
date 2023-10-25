@@ -33,47 +33,7 @@ export interface Database {
         }
         Relationships: []
       }
-      pedidos: {
-        Row: {
-          cliente_id: string
-          created_at: string
-          id: number
-          produto: number
-          quantidade: number | null
-          status: string
-        }
-        Insert: {
-          cliente_id?: string
-          created_at?: string
-          id?: number
-          produto?: number
-          quantidade?: number | null
-          status?: string
-        }
-        Update: {
-          cliente_id?: string
-          created_at?: string
-          id?: number
-          produto?: number
-          quantidade?: number | null
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pedidos_cliente_id_fkey"
-            columns: ["cliente_id"]
-            referencedRelation: "clientes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pedidos_produto_fkey"
-            columns: ["produto"]
-            referencedRelation: "produtos"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      perms: {
+      info_admin: {
         Row: {
           email: string
           id: string
@@ -97,9 +57,61 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "perms_id_fkey"
+            foreignKeyName: "info_admin_id_fkey"
             columns: ["id"]
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      pedidos: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          id: number
+          observacao: string
+          produto: number
+          quantidade: number | null
+          status: string
+          updated_by: string | null
+        }
+        Insert: {
+          cliente_id?: string
+          created_at?: string
+          id?: number
+          observacao?: string
+          produto?: number
+          quantidade?: number | null
+          status?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          id?: number
+          observacao?: string
+          produto?: number
+          quantidade?: number | null
+          status?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_cliente_id_fkey"
+            columns: ["cliente_id"]
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_produto_fkey"
+            columns: ["produto"]
+            referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_updated_by_fkey"
+            columns: ["updated_by"]
+            referencedRelation: "info_admin"
             referencedColumns: ["id"]
           }
         ]
@@ -110,10 +122,10 @@ export interface Database {
           created_at: string
           descricao: string
           id: number
-          image_url: string | null
+          image_url: string
           nome: string
-          preco: number
-          sub_categoria: string | null
+          preco_in_cents: number
+          sub_categoria: string
           vegan: boolean
           visible: boolean
         }
@@ -122,10 +134,10 @@ export interface Database {
           created_at?: string
           descricao?: string
           id?: number
-          image_url?: string | null
+          image_url?: string
           nome?: string
-          preco?: number
-          sub_categoria?: string | null
+          preco_in_cents?: number
+          sub_categoria?: string
           vegan?: boolean
           visible?: boolean
         }
@@ -134,10 +146,10 @@ export interface Database {
           created_at?: string
           descricao?: string
           id?: number
-          image_url?: string | null
+          image_url?: string
           nome?: string
-          preco?: number
-          sub_categoria?: string | null
+          preco_in_cents?: number
+          sub_categoria?: string
           vegan?: boolean
           visible?: boolean
         }

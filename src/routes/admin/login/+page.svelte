@@ -42,12 +42,16 @@
 		await supabase.auth.signOut();
 	};
 </script>
+<main class="text-whit">
 
-<!-- <form on:submit={handleSignUp}> -->
-<input name="email" bind:value={email} />
-<input type="password" name="password" bind:value={password} />
-<button on:click={handleSignUp}>Sign up</button>
-<!-- </form> -->
 
-<button on:click={handleSignIn}>Sign in</button>
-<button on:click={handleSignOut}>Sign out</button>
+	<!-- <form on:submit={handleSignUp}> -->
+		<input name="email" bind:value={email} />
+		<input type="password" name="password" bind:value={password} />
+		<button class="bg-red-300" on:click={handleSignUp}>Sign up</button>
+		<!-- </form> -->
+		
+		<button class="bg-red-300" on:click={handleSignIn}>Sign in</button>
+		<button class="bg-red-300" on:click={handleSignOut}>Sign out</button>
+		
+	</main>

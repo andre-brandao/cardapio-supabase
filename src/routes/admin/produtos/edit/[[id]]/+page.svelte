@@ -1,11 +1,10 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-
+	
+	import type { PageData } from './$types';
 	export let data: PageData;
 
-	
 	const { form, errors, constraints, enhance } = superForm(data.form);
 	let { supabase } = data;
 	$: ({ supabase } = data);
@@ -48,24 +47,26 @@
 
 <main>
 	<SuperDebug data={$form} />
-	<form method="POST" use:enhance>
-		<img
-			src={$form.image_url.length > 0
-				? $form.image_url
-				: 'https://eftqpoetlueihfnlckbp.supabase.co/storage/v1/object/public/static_images/no_image.jpg'}
-			alt="preview"
-		/>
+	<img
+		src={$form.image_url.length > 0
+			? $form.image_url
+			: 'https://eftqpoetlueihfnlckbp.supabase.co/storage/v1/object/public/static_images/no_image.jpg'}
+		alt="preview"
+	/>
 
-		<label class="text-primary-foreground" for="img">
-			Imagem
-		</label>
-		<input
-			id="img"
-			name="img"
-			type="file"
-			accept="image/png, image/jpeg, image/gif"
-			on:change={uploadFile}
-		/>
+	<label class="text-primary-foreground" for="img"> Imagem </label>
+	<input
+		class="text-black"
+		id="img"
+		name="img"
+		type="file"
+		accept="image/png, image/jpeg, image/gif"
+		on:change={uploadFile}
+	/>
+	<form action="?/formsubmit" method="POST" use:enhance>
+		<!-- create a hidden input for image_url -->
+		<input type="hidden" name="image_url" bind:value={$form.image_url} />
+
 		<label class="text-primary-foreground" for="nome">Nome</label>
 		<input
 			type="text"
@@ -129,6 +130,11 @@
 </main>
 
 <style>
+	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 	form {
 		display: flex;
 		flex-direction: column;
