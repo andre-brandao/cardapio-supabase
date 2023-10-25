@@ -2,25 +2,31 @@ import { fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms/server';
 import { produtoSchema } from '$lib/schemas';
-import { supabase } from '$lib/supabase';
+// import { supabase } from '$lib/supabase';
 
 export const load = (async (event) => {
+	const supabase = event.locals.supabase;
 	const prodID = event.params.id?.replace('$', '');
 
 	if (prodID !== undefined) {
-		const prod = await supabase.from('produtos').select().eq('id', prodID).single();
+		const { data } = await supabase.from('produtos').select().eq('id', prodID).single();
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore
-		const form = await superValidate(prod.data, produtoSchema);
+		const form = await superValidate(data, produtoSchema);
 		return { form };
 	}
 
 	const form = await superValidate(event, produtoSchema);
-	return { form };
+	return { form ,supabase};
+
 }) satisfies PageServerLoad;
 
 export const actions = {
 	default: async (event) => {
+		const supabase = event.locals.supabase;
 		const prodID = event.params.id?.replace('$', '');
+
+		console.log('prodID: ' + parseInt(prodID ?? ''));
 
 		const form = await superValidate(event, produtoSchema);
 
@@ -33,9 +39,9 @@ export const actions = {
 		}
 		//if prodID is undefined, it's a new product
 		if (prodID === undefined) {
-			const { data, error } = await supabase.from('produtos').insert(form.data);
-			console.log('created new product');
+			const { data, error } = await supabase.from('produtos').insert(form.data).select();
 
+			console.log('created new product');
 			console.log(data);
 
 			if (error) {
@@ -45,8 +51,12 @@ export const actions = {
 				console.log(error);
 			}
 		} else {
-			const { data, error } = await supabase.from('produtos').update(form.data).eq('id', prodID);
-			console.log(error);
+			// TODO: FIX update product
+			const { data, error } = await supabase
+				.from('produtos')
+				.update(form.data)
+				.eq('id', parseInt(prodID))
+				.single();
 
 			console.log('updated product');
 			console.log(data);

@@ -21,10 +21,13 @@
 
 		return () => subscription.unsubscribe();
 	});
+	
 </script>
 
 {#if data.session}
-	<p>Bem vindo {data.session.user.email}</p>
+	<a href="/admin/produtos">
+		<p>Bem vindo {data.session.user.email}</p>
+	</a>
 	<!-- content here -->
 {:else}
 	<p>Por favor, faça login</p>
