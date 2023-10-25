@@ -21,11 +21,14 @@
 
 		return () => subscription.unsubscribe();
 	});
-	
 </script>
 
 {#if data.session}
-	<a href="/admin/produtos">
+	<a href="/admin/comandas" class="text-white">comandas</a>
+	<a href="/admin/produtos" class="text-white">produtos</a>
+	<a href="/cliente/mesa/QGRo1" class="text-white">quarto 1</a>
+
+	<a href="/admin/produtos" class="text-white">
 		<p>Bem vindo {data.session.user.email}</p>
 	</a>
 	<!-- content here -->

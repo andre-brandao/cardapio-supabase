@@ -115,7 +115,7 @@ export interface Database {
           preco: number
           sub_categoria: string | null
           vegan: boolean
-          visible: boolean | null
+          visible: boolean
         }
         Insert: {
           categoria?: string

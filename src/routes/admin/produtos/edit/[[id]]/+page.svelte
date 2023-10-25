@@ -4,6 +4,8 @@
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
 	export let data: PageData;
+
+	
 	const { form, errors, constraints, enhance } = superForm(data.form);
 	let { supabase } = data;
 	$: ({ supabase } = data);
@@ -54,7 +56,9 @@
 			alt="preview"
 		/>
 
-		<label for="img" />
+		<label class="text-primary-foreground" for="img">
+			Imagem
+		</label>
 		<input
 			id="img"
 			name="img"
@@ -62,7 +66,7 @@
 			accept="image/png, image/jpeg, image/gif"
 			on:change={uploadFile}
 		/>
-		<label for="nome">Nome</label>
+		<label class="text-primary-foreground" for="nome">Nome</label>
 		<input
 			type="text"
 			id="nome"
@@ -72,7 +76,7 @@
 			bind:value={$form.nome}
 		/>
 
-		<label for="descricao">descricao</label>
+		<label class="text-primary-foreground" for="descricao">descricao</label>
 		<input
 			type="text"
 			id="descricao"
@@ -82,7 +86,7 @@
 			bind:value={$form.descricao}
 		/>
 
-		<label for="preco">preco</label>
+		<label class="text-primary-foreground" for="preco">preco</label>
 		<input
 			type="number"
 			id="preco"
@@ -92,7 +96,7 @@
 			bind:value={$form.preco}
 		/>
 
-		<label for="categoria">cat</label>
+		<label class="text-primary-foreground" for="categoria">cat</label>
 		<input
 			type="text"
 			id="categoria"
@@ -102,7 +106,7 @@
 			bind:value={$form.categoria}
 		/>
 
-		<label for="subcategoria">sub cat</label>
+		<label class="text-primary-foreground" for="subcategoria">sub cat</label>
 		<input
 			type="text"
 			id="sub_categoria"
@@ -112,14 +116,14 @@
 			bind:value={$form.sub_categoria}
 		/>
 
-		<label for="vegan">vegan</label>
+		<label class="text-primary-foreground" for="vegan">vegan</label>
 		<input type="checkbox" id="vegan" name="vegan" bind:checked={$form.vegan} />
 
-		<label for="visible">visivel</label>
+		<label class="text-primary-foreground" for="visible">visivel</label>
 		<input type="checkbox" id="visible" name="visible" bind:checked={$form.visible} />
 
 		<div>
-			<button>Submit</button>
+			<button class="bg-primary">Submit</button>
 		</div>
 	</form>
 </main>

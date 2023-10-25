@@ -11,3 +11,9 @@ export const produtoSchema = z.object({
 	vegan: z.boolean(),
 	visible: z.boolean()
 });
+
+export const clienteSchema = z.object({
+	nome: z.string().min(3).max(25),
+	telefone: z.string().min(11).max(20),
+	mesa: z.string().min(1).max(10),
+});
