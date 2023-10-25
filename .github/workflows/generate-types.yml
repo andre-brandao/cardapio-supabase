@@ -2,7 +2,7 @@ name: 'generate-types'
 on:
   push:
     branches:
-      - master 
+      - master
 
 jobs:
   build:
@@ -13,5 +13,11 @@ jobs:
           version: latest
       - run: supabase init
       - run: supabase db start
-      - name: Generate TypeScript types
-        run: supabase gen types typescript --project-id "eftqpoetlueihfnlckbp" --schema public > src/lib/supabase-types.ts
+      - name: Verify generated types match Postgres schema
+        run: |
+          supabase gen types typescript --local > schema.gen.ts
+          if ! git diff --ignore-space-at-eol --exit-code --quiet schema.gen.ts; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff
+            exit 1
+          fi
