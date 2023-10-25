@@ -127,7 +127,7 @@ export interface Database {
           preco?: number
           sub_categoria?: string | null
           vegan?: boolean
-          visible?: boolean | null
+          visible?: boolean
         }
         Update: {
           categoria?: string
@@ -139,7 +139,7 @@ export interface Database {
           preco?: number
           sub_categoria?: string | null
           vegan?: boolean
-          visible?: boolean | null
+          visible?: boolean
         }
         Relationships: []
       }
