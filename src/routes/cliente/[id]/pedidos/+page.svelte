@@ -5,27 +5,46 @@
 	export let data: PageData;
 
 	const pedidos = data.pedidos;
+
+	function getColor(str: string) {
+		if (str === 'Entregue') {
+			return 'bg-green-500';
+		}
+		if (str === 'Em Preparo') {
+			return 'bg-yellow-300 ';
+		}
+		if (str === 'Cancelado') {
+			return 'bg-red-400';
+		}
+		return 'bg-gray-300';
+	}
 </script>
 
 {#if data.cliente}
 	<CardCliente {...data.cliente} />
 {/if}
 
-<!-- print pedidos -->
-{#each pedidos as pedido}
-	<div class="grid grid-cols-2 gap-4">
-		<div class="text-white">
-			<p>Produto: {pedido.produtos?.nome}</p>
-			<p>Quantidade: {pedido.quantidade}</p>
-			<p>Valor: {pedido.produtos?.preco_in_cents}</p>
-			<p>Observação:{pedido.observacao}</p>
-		</div>
-		<div class="text-white">
-			<p>Cliente:</p>
-			<p>Mesa:</p>
-			<p>Dia:{new Date(pedido.created_at).toLocaleDateString()}</p>
-			<p>Horário: {new Date(pedido.created_at).toLocaleTimeString()}</p>
-		</div>
-	</div>
-{/each}
+<main class="mt-5 mb-20">
+	<!-- print pedidos -->
+	{#each pedidos as pedido}
+		<div class={'m-2 rounded-sm p-1 ' + getColor(pedido.status)}>
+			<div class="grid grid-cols-2 gap-4">
+				<div>
+					<p>{pedido.produtos?.nome}</p>
+					<p>Quantidade: {pedido.quantidade}</p>
+					{#if pedido.produtos}
+						<p>Valor: R${(pedido.produtos.preco_in_cents * pedido.quantidade).toFixed(2)}</p>
+					{/if}
+					<p>Dia:{new Date(pedido.created_at).toLocaleDateString()}</p>
+					<p>Horário: {new Date(pedido.created_at).toLocaleTimeString()}</p>
+				</div>
+				<div>
+					<p>Status: {pedido.status}</p>
+					<p>Observação:{pedido.observacao}</p>
 
+					
+				</div>
+			</div>
+		</div>
+	{/each}
+</main>

@@ -5,9 +5,10 @@
 	import { superForm } from 'sveltekit-superforms/client';
 
 	const { form, errors, constraints, enhance } = superForm(data.form);
+	$form.quantidade = 1;
 </script>
 
-<form  method="POST"  use:enhance>
+<form method="POST" use:enhance>
 	<label class="text-primary-foreground" for="observacao">Observação</label>
 	<input
 		type="text"
@@ -31,12 +32,10 @@
 	<button type="submit" class="font-bold bg-black">Enviar</button>
 </form>
 
-
 <style>
-    form{
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
 </style>

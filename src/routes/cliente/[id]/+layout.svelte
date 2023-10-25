@@ -1,14 +1,15 @@
 <script lang="ts">
 	import type { LayoutData } from './$types';
-    import { page } from '$app/stores';
+	import { page } from '$app/stores';
+	import Transition from '$lib/Transition.svelte';
 
 	export let data: LayoutData;
 </script>
 
-<h1 class="text-whtie bg-red-600">OLA {data.cliente?.nome}</h1>
-
-<slot />
-
+<!-- <h1 class="text-whtie bg-red-600">OLA {data.cliente?.nome}</h1> -->
+<Transition>
+	<slot />
+</Transition>
 <nav
 	class="fixed bottom-0 left-0 right-0 bg-muted flex justify-around items-center h-16 shadow-md z-10"
 >

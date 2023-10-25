@@ -41,7 +41,7 @@
 			<Tabs.Content value={categoria}>
 				<div class="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
 					{#each produtosFrom(categoria) as produto (produto.id)}
-						<a href={$page.url + '/pedir'}>
+						<a href={$page.url + '/' + produto.id + '/pedir'}>
 							<CardProduto {...produto} />
 						</a>
 					{/each}

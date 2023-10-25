@@ -5,7 +5,18 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	const produtos = data.produtos;
+	$: produtos = data.produtos.filter((prod) => {
+
+		return (
+			prod.nome.toLowerCase().includes(barra_pesquisa.toLowerCase()) ||
+			prod.descricao?.toLowerCase().includes(barra_pesquisa.toLowerCase()) ||
+			prod.categoria.toLowerCase().includes(barra_pesquisa.toLowerCase())
+		);
+
+	});
+
+	let barra_pesquisa = '';
+
 	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))];
 
 	function produtosFrom(categoria: string) {
@@ -18,14 +29,17 @@
 				if (a.nome > b.nome) {
 					return 1;
 				}
-				
+
 				return 0;
 			});
-		}
-	</script>
+	}
+</script>
 
-<a class="text-white" href="/admin/produtos/edit">NOVO produto</a>
 <main class="flex flex-col">
+	<div class="pb-4 pt-5">
+		<a class="bg-muted m-3 p-2 rounded-sm" href="/admin/produtos/edit">NOVO produto</a>
+		<input type="text" bind:value={barra_pesquisa}>
+	</div>
 	<Tabs.Root value={categorias[0]}>
 		<div class="sticky top-0 z-10 p-2 bg-background">
 			<Tabs.List class="flex overflow-y-scroll">

@@ -3,6 +3,7 @@
 
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import Login from '$lib/Login.svelte';
 
 	export let data: LayoutData;
 	//   export let data
@@ -24,17 +25,16 @@
 </script>
 
 {#if data.session}
+<nav class="flex gap-4 p-2 justify-between bg-red-900">
 	<a href="/admin/comandas" class="text-white">comandas</a>
 	<a href="/admin/produtos" class="text-white">produtos</a>
 	<a href="/cliente/mesa/QGRo1" class="text-white">quarto 1</a>
-
-	<a href="/admin/produtos" class="text-white">
-		<p>Bem vindo {data.session.user.email}</p>
-	</a>
+	<p class="text-white">Bem vindo {data.session.user.email}</p>
+	</nav>
 	<!-- content here -->
+	<slot />
 {:else}
-<a class="text-white" href="/admin/login">
-	<p>Por favor, faça login</p>
-</a>
+	<div class="flex justify-center items-center h-screen">
+		<Login {supabase} />
+	</div>
 {/if}
-<slot />

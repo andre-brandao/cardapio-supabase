@@ -16,7 +16,7 @@ export const actions = {
 	default: async (event) => {
 		const supabase = event.locals.supabase;
 		const clienteID = event.params.id;
-
+		const pordutoID = parseInt(event.params.id_produto);
 
 		const form = await superValidate(event, pedidoSchema);
 
@@ -29,16 +29,16 @@ export const actions = {
 				form
 			});
 		}
-        const data = {
-            ...form.data,
-            produto: 4,
-            cliente_id: clienteID
-        }
 
-		const { data:pedido, error } = await supabase.from('pedidos').insert(data).select();
+		const data = {
+			...form.data,
+			produto: pordutoID,
+			cliente_id: clienteID
+		};
 
-	console.log(pedido);
-    
+		const { data: pedido, error } = await supabase.from('pedidos').insert(data).select();
+
+		console.log(pedido);
 
 		if (error) {
 			// return fail(500, {

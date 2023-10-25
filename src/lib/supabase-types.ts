@@ -71,7 +71,7 @@ export interface Database {
           id: number
           observacao: string
           produto: number
-          quantidade: number | null
+          quantidade: number
           status: string
           updated_by: string | null
         }
@@ -81,7 +81,7 @@ export interface Database {
           id?: number
           observacao?: string
           produto?: number
-          quantidade?: number | null
+          quantidade?: number
           status?: string
           updated_by?: string | null
         }
@@ -91,7 +91,7 @@ export interface Database {
           id?: number
           observacao?: string
           produto?: number
-          quantidade?: number | null
+          quantidade?: number
           status?: string
           updated_by?: string | null
         }

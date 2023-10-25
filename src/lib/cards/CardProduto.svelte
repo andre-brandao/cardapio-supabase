@@ -18,7 +18,7 @@
 	export let	descricao= 'Descrição do produto'
 	export let	categoria= 'Categoria'
 	export let	sub_categoria= 'Subcategoria'
-	export let	preco= 420.69
+	export let	preco_in_cents= 420.69
 	export let	image_url= ''
 	export let	vegan= false
 	export let	visible= false
@@ -45,7 +45,7 @@
             <p>Card Content</p>
         </Card.Content> -->
 		<Card.Footer class="flex-grow justify-end align-text-bottom m-0 p-0 pr-3 font-medium">
-			R${preco}
+			R${preco_in_cents}
 		</Card.Footer>
 	</div>
 </Card.Root>
