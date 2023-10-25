@@ -2,7 +2,7 @@ name: 'generate-types'
 on:
   push:
     branches:
-      - main  # You can specify the branch you want to trigger the action for
+      - master 
 
 jobs:
   build:
