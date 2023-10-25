@@ -8,14 +8,14 @@
 	$: produtos = data.produtos.filter((prod) => {
 
 		return (
-			prod.nome.toLowerCase().includes(barra_pesquisa.toLowerCase()) ||
-			prod.descricao?.toLowerCase().includes(barra_pesquisa.toLowerCase()) ||
-			prod.categoria.toLowerCase().includes(barra_pesquisa.toLowerCase())
+			prod.nome.toLowerCase().includes(search_bar.toLowerCase()) ||
+			prod.descricao?.toLowerCase().includes(search_bar.toLowerCase()) ||
+			prod.categoria.toLowerCase().includes(search_bar.toLowerCase())
 		);
 
 	});
 
-	let barra_pesquisa = '';
+	let search_bar = '';
 
 	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))];
 
@@ -38,7 +38,7 @@
 <main class="flex flex-col">
 	<div class="pb-4 pt-5">
 		<a class="bg-muted m-3 p-2 rounded-sm" href="/admin/produtos/edit">NOVO produto</a>
-		<input type="text" bind:value={barra_pesquisa}>
+		<input type="text" bind:value={search_bar}>
 	</div>
 	<Tabs.Root value={categorias[0]}>
 		<div class="sticky top-0 z-10 p-2 bg-background">

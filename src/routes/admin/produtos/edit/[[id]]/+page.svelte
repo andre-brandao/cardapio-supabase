@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	
+
 	import type { PageData } from './$types';
+	import { maskify } from '$lib/mask';
 	export let data: PageData;
 
 	const { form, errors, constraints, enhance } = superForm(data.form);
@@ -43,6 +44,24 @@
 		$form.image_url = url.publicUrl;
 		console.log('upload concluido ' + url.publicUrl);
 	}
+
+	let priceFormated = '0.00';
+	const handleChange = () => {
+		console.log('currentInput: ' + $form.preco);
+
+		let cleanedInput = $form.preco
+			.toString()
+			.replace(/\D*/gm, '') // remove non digits
+			.replace(/^0+/gm, ''); // remove leading zeros
+		console.log('cleanedInput.length: ' + cleanedInput.length);
+
+		if (cleanedInput.length === 0) {
+			console.log('setting amountFormatted to 0.00 --- BUT IT does not work ');
+			priceFormated = '0.00'; // ERROR this never works
+		} else {
+			priceFormated = (parseInt(cleanedInput, 10) / 100).toString();
+		}
+	};
 </script>
 
 <main>

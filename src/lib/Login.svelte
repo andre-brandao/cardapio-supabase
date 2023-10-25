@@ -42,17 +42,19 @@
 	};
 </script>
 
-<main class="text-foreground">
+<main class="text-foreground bg-card p-3 rounded-sm">
+
+    <h1 class="text-black">Login admin</h1>
 	<!-- <form on:submit={handleSignUp}> -->
 	<label class="text-black" for="email">Email</label>
 	<input name="email" bind:value={email} />
 	<label class="text-black" for="password">Senha</label>
 	<input type="password" name="password" bind:value={password} />
-	<button class="bg-red-300" on:click={handleSignUp}>Sign up</button>
+	<!-- <button class="bg-red-300" on:click={handleSignUp}>Sign up</button> -->
 	<!-- </form> -->
 
-	<button class="bg-red-300" on:click={handleSignIn}>Sign in</button>
-	<button class="bg-red-300" on:click={handleSignOut}>Sign out</button>
+	<button class="bg-green-300" on:click={handleSignIn}>Log in</button>
+	<!-- <button class="bg-red-300" on:click={handleSignOut}>Log out</button> -->
 </main>
 
 <style>

@@ -1,5 +1,6 @@
 <script>
 	import * as Card from '$lib/components/ui/card';
+	import { formatPrice } from '$lib/utils';
 
 	//     export const produtoSchema = z.object({
 	// 	nome: z.string().min(3).max(25),
@@ -13,7 +14,8 @@
 	// 	visible: z.boolean()
 	// });
 
-	
+
+	//function that receices an int (price in cents and returns formated R$ 00.00)
 	export let	nome= 'Produto'
 	export let	descricao= 'Descrição do produto'
 	export let	categoria= 'Categoria'
@@ -44,8 +46,8 @@
 		<!-- <Card.Content>
             <p>Card Content</p>
         </Card.Content> -->
-		<Card.Footer class="flex-grow justify-end align-text-bottom m-0 p-0 pr-3 font-medium">
-			R${preco_in_cents}
+		<Card.Footer  class="flex-grow justify-end align-text-bottom m-0 p-0 pr-3 font-medium">
+			R${formatPrice(preco_in_cents)}
 		</Card.Footer>
 	</div>
 </Card.Root>

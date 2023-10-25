@@ -4,6 +4,7 @@
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Login from '$lib/Login.svelte';
+	import { page } from '$app/stores';
 
 	export let data: LayoutData;
 	//   export let data
@@ -25,11 +26,26 @@
 </script>
 
 {#if data.session}
-<nav class="flex gap-4 p-2 justify-between bg-red-900">
-	<a href="/admin/comandas" class="text-white">comandas</a>
-	<a href="/admin/produtos" class="text-white">produtos</a>
-	<a href="/cliente/mesa/QGRo1" class="text-white">quarto 1</a>
-	<p class="text-white">Bem vindo {data.session.user.email}</p>
+	<nav class="bg-muted rounded-sm m-3 p-2 flex items-center overflow-auto space-x-4 lg:space-x-6">
+		<a
+			href="/admin/comandas"
+			class="{$page.route.id == '/admin/comandas'
+				? 'bg-background text-white p-1'
+				: 'text-muted-foreground'} rounded-sm px-1 font-bold transition-colors hover:text-primary"
+		>
+			Comandas
+		</a>
+		<a
+			href="/admin/produtos"
+			class="{$page.route.id == '/admin/produtos'
+				? 'bg-background text-white p-1'
+				: 'text-muted-foreground'} rounded-sm px-1 font-bold transition-colors hover:text-primary"
+		>
+			Produtos
+		</a>
+
+		<a href="/cliente/mesa/QGRo1" class="text-white">quarto 1</a>
+		<p class="text-white">Bem vindo {data.session.user.email}</p>
 	</nav>
 	<!-- content here -->
 	<slot />
