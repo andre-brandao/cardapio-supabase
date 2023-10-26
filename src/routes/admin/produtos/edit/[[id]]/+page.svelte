@@ -106,7 +106,7 @@
 			bind:value={$form.descricao}
 		/>
 
-		<label class="text-primary-foreground" for="preco">preco</label>
+		<label class="text-primary-foreground" for="preco">preco in cents</label>
 		<input
 			type="number"
 			id="preco"

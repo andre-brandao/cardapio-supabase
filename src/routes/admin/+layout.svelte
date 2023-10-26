@@ -3,7 +3,7 @@
 
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import Login from '$lib/Login.svelte';
+	import Login from '$lib/components/Login.svelte';
 	import { page } from '$app/stores';
 
 	export let data: LayoutData;

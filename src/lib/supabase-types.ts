@@ -73,6 +73,7 @@ export interface Database {
           produto: number
           quantidade: number
           status: string
+          total_in_cents: number
           updated_by: string | null
         }
         Insert: {
@@ -83,6 +84,7 @@ export interface Database {
           produto?: number
           quantidade?: number
           status?: string
+          total_in_cents?: number
           updated_by?: string | null
         }
         Update: {
@@ -93,6 +95,7 @@ export interface Database {
           produto?: number
           quantidade?: number
           status?: string
+          total_in_cents?: number
           updated_by?: string | null
         }
         Relationships: [
@@ -136,7 +139,7 @@ export interface Database {
           id?: number
           image_url?: string
           nome?: string
-          preco_in_cents?: number
+          preco_in_cents: number
           sub_categoria?: string
           vegan?: boolean
           visible?: boolean

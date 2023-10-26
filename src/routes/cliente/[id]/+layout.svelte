@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { LayoutData } from './$types';
 	import { page } from '$app/stores';
-	import Transition from '$lib/Transition.svelte';
+	import Transition from '$lib/components/Transition.svelte';
 
 	export let data: LayoutData;
 </script>

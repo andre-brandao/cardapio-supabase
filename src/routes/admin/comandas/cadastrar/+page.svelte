@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import { maskify } from '$lib/mask';
 	import type { PageData } from './$types';
+	import { maskify } from '$lib/mask';
 
 	export let data: PageData;
-
 	const { form, errors, constraints, enhance } = superForm(data.form);
 </script>
 
