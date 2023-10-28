@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms/server';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 const pedidoSchema = z.object({
 	observacao: z.string().optional(),
@@ -9,7 +9,15 @@ const pedidoSchema = z.object({
 });
 export const load = (async (event) => {
 	const form = await superValidate(event, pedidoSchema);
-	return { form };
+	const { data, error } = await event.locals.supabase
+		.from('produtos')
+		.select()
+		.eq('id', event.params.id_produto)
+		.single();
+	if (error) {
+		console.log(error);
+	}
+	return { form, produto: data };
 }) satisfies PageServerLoad;
 
 export const actions = {
@@ -45,6 +53,9 @@ export const actions = {
 			// 	error
 			// });
 			console.log(error);
+		}
+		else{
+			throw redirect(303, `/cliente/${clienteID}/cardapio`);
 		}
 
 		return { form };

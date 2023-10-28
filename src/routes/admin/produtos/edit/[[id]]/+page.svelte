@@ -4,6 +4,7 @@
 
 	import type { PageData } from './$types';
 	import { maskify } from '$lib/mask';
+	import { page } from '$app/stores';
 	export let data: PageData;
 
 	const { form, errors, constraints, enhance } = superForm(data.form);
@@ -45,126 +46,151 @@
 		console.log('upload concluido ' + url.publicUrl);
 	}
 
-	let priceFormated = '0.00';
-	const handleChange = () => {
-		console.log('currentInput: ' + $form.preco);
+	async function deleteProduct() {
+		const response = await supabase.from('produtos').delete().match({ id: $page.params.id }).single();
+		console.log(response);
+	}
 
-		let cleanedInput = $form.preco
-			.toString()
-			.replace(/\D*/gm, '') // remove non digits
-			.replace(/^0+/gm, ''); // remove leading zeros
-		console.log('cleanedInput.length: ' + cleanedInput.length);
+	// let priceFormated = '0.00';
+	// const handleChange = () => {
+	// 	console.log('currentInput: ' + $form.preco_in_cents);
 
-		if (cleanedInput.length === 0) {
-			console.log('setting amountFormatted to 0.00 --- BUT IT does not work ');
-			priceFormated = '0.00'; // ERROR this never works
-		} else {
-			priceFormated = (parseInt(cleanedInput, 10) / 100).toString();
-		}
-	};
+	// 	let cleanedInput = $form.preco_in_cents
+	// 		.toString()
+	// 		.replace(/\D*/gm, '') // remove non digits
+	// 		.replace(/^0+/gm, ''); // remove leading zeros
+	// 	console.log('cleanedInput.length: ' + cleanedInput.length);
+
+	// 	if (cleanedInput.length === 0) {
+	// 		console.log('setting amountFormatted to 0.00 --- BUT IT does not work ');
+	// 		priceFormated = '0.00'; // ERROR this never works
+	// 	} else {
+	// 		priceFormated = (parseInt(cleanedInput, 10) / 100).toString();
+	// 	}
+	// };
 </script>
 
-<main>
-	<SuperDebug data={$form} />
-	<img
-		src={$form.image_url.length > 0
-			? $form.image_url
-			: 'https://eftqpoetlueihfnlckbp.supabase.co/storage/v1/object/public/static_images/no_image.jpg'}
-		alt="preview"
-	/>
+<main class="flex flex-col items-center">
+	<div class="grid grid-cols-4 text-right gap-4 pb-10">
+		<!-- <SuperDebug data={$form} /> -->
+		<img
+			class="object-cover aspect-square"
+			width="100"
+			height="100"
+			src={$form.image_url.length > 0
+				? $form.image_url
+				: 'https://eftqpoetlueihfnlckbp.supabase.co/storage/v1/object/public/static_images/no_image.jpg'}
+			alt="preview"
+		/>
 
-	<label class="text-primary-foreground" for="img"> Imagem </label>
-	<input
-		class="text-black"
-		id="img"
-		name="img"
-		type="file"
-		accept="image/png, image/jpeg, image/gif"
-		on:change={uploadFile}
-	/>
-	<form action="?/formsubmit" method="POST" use:enhance>
-		<!-- create a hidden input for image_url -->
+		<input
+			class="col-span-3 bg-accent flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+			id="img"
+			name="img"
+			type="file"
+			accept="image/png, image/jpeg, image/gif"
+			on:change={uploadFile}
+		/>
+	</div>
+
+	<form
+		class="flex flex-col gap-5 pb-10 text-lg font-bold"
+		action="?/formsubmit"
+		method="POST"
+		use:enhance
+	>
 		<input type="hidden" name="image_url" bind:value={$form.image_url} />
+		<div class="grid grid-cols-4 text-right gap-4">
+			<label class="py-2 text-primary-foreground" for="nome">Nome</label>
+			<input
+				type="text"
+				class="col-span-3 bg-accent flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+				id="nome"
+				name="nome"
+				aria-invalid={$errors.nome ? 'true' : undefined}
+				{...$constraints.nome}
+				bind:value={$form.nome}
+			/>
+		</div>
+		<div class="grid grid-cols-4 text-right gap-4">
+			<label class="py-2 text-primary-foreground" for="descricao">Descrição</label>
+			<textarea
+				rows="5"
+				class="col-span-3 bg-accent flex w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+				id="descricao"
+				name="descricao"
+				aria-invalid={$errors.descricao ? 'true' : undefined}
+				{...$constraints.descricao}
+				bind:value={$form.descricao}
+			/>
+		</div>
 
-		<label class="text-primary-foreground" for="nome">Nome</label>
-		<input
-			type="text"
-			id="nome"
-			name="nome"
-			aria-invalid={$errors.nome ? 'true' : undefined}
-			{...$constraints.nome}
-			bind:value={$form.nome}
-		/>
+		<div class="grid grid-cols-4 text-right gap-4">
+			<label class="py-2 text-primary-foreground" for="preco_in_cents">Preço em Cents</label>
+			<input
+				type="number"
+				class="col-span-3 bg-accent flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+				id="preco_in_cents"
+				name="preco_in_cents"
+				aria-invalid={$errors.preco_in_cents ? 'true' : undefined}
+				{...$constraints.preco_in_cents}
+				bind:value={$form.preco_in_cents}
+			/>
+		</div>
+		<div class="grid grid-cols-4 text-right gap-4">
+			<label class="py-2 text-primary-foreground" for="categoria">Categoria</label>
+			<input
+				type="text"
+				class="col-span-3 bg-accent flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+				id="categoria"
+				name="categoria"
+				aria-invalid={$errors.categoria ? 'true' : undefined}
+				{...$constraints.categoria}
+				bind:value={$form.categoria}
+			/>
+		</div>
+		<div class="grid grid-cols-4 text-right gap-4">
+			<label class="py-2 text-primary-foreground" for="subcategoria">Sub Categoria</label>
+			<input
+				type="text"
+				class="col-span-3 bg-accent flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+				id="sub_categoria"
+				name="sub_categoria"
+				aria-invalid={$errors.sub_categoria ? 'true' : undefined}
+				{...$constraints.sub_categoria}
+				bind:value={$form.sub_categoria}
+			/>
+		</div>
+		<div class="flex justify-evenly">
+			<div>
+				<label class="py-2 text-primary-foreground" for="vegan">Vegano</label>
+				<input class="" type="checkbox" id="vegan" name="vegan" bind:checked={$form.vegan} />
+			</div>
 
-		<label class="text-primary-foreground" for="descricao">descricao</label>
-		<input
-			type="text"
-			id="descricao"
-			name="descricao"
-			aria-invalid={$errors.descricao ? 'true' : undefined}
-			{...$constraints.descricao}
-			bind:value={$form.descricao}
-		/>
+			<div>
+				<label class="py-2 text-primary-foreground" for="visible">Visivel</label>
+				<input type="checkbox" id="visible" name="visible" bind:checked={$form.visible} />
+			</div>
+		</div>
 
-		<label class="text-primary-foreground" for="preco">preco in cents</label>
-		<input
-			type="number"
-			id="preco"
-			name="preco"
-			aria-invalid={$errors.preco ? 'true' : undefined}
-			{...$constraints.preco}
-			bind:value={$form.preco}
-		/>
-
-		<label class="text-primary-foreground" for="categoria">cat</label>
-		<input
-			type="text"
-			id="categoria"
-			name="categoria"
-			aria-invalid={$errors.categoria ? 'true' : undefined}
-			{...$constraints.categoria}
-			bind:value={$form.categoria}
-		/>
-
-		<label class="text-primary-foreground" for="subcategoria">sub cat</label>
-		<input
-			type="text"
-			id="sub_categoria"
-			name="sub_categoria"
-			aria-invalid={$errors.sub_categoria ? 'true' : undefined}
-			{...$constraints.sub_categoria}
-			bind:value={$form.sub_categoria}
-		/>
-
-		<label class="text-primary-foreground" for="vegan">vegan</label>
-		<input type="checkbox" id="vegan" name="vegan" bind:checked={$form.vegan} />
-
-		<label class="text-primary-foreground" for="visible">visivel</label>
-		<input type="checkbox" id="visible" name="visible" bind:checked={$form.visible} />
-
-		<div>
-			<button class="bg-primary">Submit</button>
+		<div class="grid grid-cols-2 gap-4">
+			<button
+				class="p-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
+				>Submit</button
+			>
+			{#if $page.params.id}
+				<button
+					type="button"
+					on:click={deleteProduct}
+					class="p-4 items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-red-200 text-secondary-foreground hover:bg-red-500"
+					>Delete</button
+				>
+			{/if}
 		</div>
 	</form>
 </main>
 
 <style>
-	main {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	form {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	img {
-		width: 200px;
-		height: 200px;
-		object-fit: cover;
-	}
 	/* input {
 		display: flex;
 		height: 2.5rem;

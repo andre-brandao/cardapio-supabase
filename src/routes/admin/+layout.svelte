@@ -43,7 +43,14 @@
 		>
 			Produtos
 		</a>
-
+		<a
+			href="/admin/ultimos-pedidos"
+			class="{$page.route.id == '/admin/ultimos-pedidos'
+				? 'bg-background text-white p-1'
+				: 'text-muted-foreground'} rounded-sm px-1 font-bold transition-colors hover:text-primary"
+		>
+			Ultimos Pedidos
+		</a>
 		<a href="/cliente/mesa/QGRo1" class="text-white">quarto 1</a>
 		<p class="text-white">Bem vindo {data.session.user.email}</p>
 	</nav>

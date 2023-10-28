@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms/server';
 import { produtoSchema } from '$lib/schemas';
@@ -56,6 +56,9 @@ export const actions = {
 				// 	error
 				// });
 				console.log(error);
+			}else{
+				throw redirect(303, '/admin/produtos');
+
 			}
 		} else {
 			console.log('UPDATE');
@@ -63,11 +66,8 @@ export const actions = {
 			// TODO: FIX update product
 			const { data, error, status } = await supabase
 				.from('produtos')
-				.update({
-					id: parseInt(prodID),
-					...form.data
-				})
-				.eq('id', parseInt(prodID));
+				.update(form.data)
+				.match({ id: parseInt(prodID) });
 
 			console.log('updated product');
 			console.log(data);
@@ -75,9 +75,25 @@ export const actions = {
 
 			if (error) {
 				console.log(error);
+			}else{
+				throw redirect(303, '/admin/produtos');
+
 			}
 		}
 
 		return { form };
+	},
+	delete: async (event) => {
+		const supabase = event.locals.supabase;
+		const prodID = event.params.id;
+
+		console.log('prodID: ' + prodID);
+		console.log(typeof prodID);
+
+		const response = await supabase
+			.from('produtos')
+			.delete()
+			.match({ id: parseInt(prodID!) });
+		console.log(response);
 	}
 };

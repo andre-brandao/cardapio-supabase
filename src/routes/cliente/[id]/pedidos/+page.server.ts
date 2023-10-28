@@ -10,6 +10,7 @@ export const load = (async (event) => {
 	const { data: pedidos, error } = await supabase
 		.from('pedidos')
 		.select('*, produtos (*)')
+        .order('created_at', { ascending: false })
 		.eq('cliente_id', clienteID);
 
         if (error) {
