@@ -4,7 +4,7 @@ export const produtoSchema = z.object({
 	nome: z.string().min(3).max(30).trim(),
 	descricao: z.string().trim(),
 	categoria: z.string().trim(),
-	sub_categoria: z.string().trim(),
+	// sub_categoria: z.string().trim(),
 
 	preco_in_cents: z.number(),
 	image_url: z.string().min(0).trim(),

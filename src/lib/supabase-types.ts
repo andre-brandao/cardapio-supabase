@@ -9,6 +9,38 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      adicional: {
+        Row: {
+          created_at: string
+          id: number
+          nome: string
+          preco_in_cents: number
+          produto_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          nome?: string
+          preco_in_cents: number
+          produto_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          nome?: string
+          preco_in_cents?: number
+          produto_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adicional_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       clientes: {
         Row: {
           created_at: string
@@ -59,6 +91,7 @@ export interface Database {
           {
             foreignKeyName: "info_admin_id_fkey"
             columns: ["id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -102,18 +135,21 @@ export interface Database {
           {
             foreignKeyName: "pedidos_cliente_id_fkey"
             columns: ["cliente_id"]
+            isOneToOne: false
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "pedidos_produto_fkey"
             columns: ["produto"]
+            isOneToOne: false
             referencedRelation: "produtos"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "pedidos_updated_by_fkey"
             columns: ["updated_by"]
+            isOneToOne: false
             referencedRelation: "info_admin"
             referencedColumns: ["id"]
           }
@@ -128,7 +164,6 @@ export interface Database {
           image_url: string
           nome: string
           preco_in_cents: number
-          sub_categoria: string
           vegan: boolean
           visible: boolean
         }
@@ -140,7 +175,6 @@ export interface Database {
           image_url?: string
           nome?: string
           preco_in_cents: number
-          sub_categoria?: string
           vegan?: boolean
           visible?: boolean
         }
@@ -152,7 +186,6 @@ export interface Database {
           image_url?: string
           nome?: string
           preco_in_cents?: number
-          sub_categoria?: string
           vegan?: boolean
           visible?: boolean
         }

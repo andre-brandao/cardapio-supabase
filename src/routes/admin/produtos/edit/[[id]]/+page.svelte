@@ -149,7 +149,7 @@
 				bind:value={$form.categoria}
 			/>
 		</div>
-		<div class="grid grid-cols-4 text-right gap-4">
+		<!-- <div class="grid grid-cols-4 text-right gap-4">
 			<label class="py-2 text-primary-foreground" for="subcategoria">Sub Categoria</label>
 			<input
 				type="text"
@@ -160,7 +160,7 @@
 				{...$constraints.sub_categoria}
 				bind:value={$form.sub_categoria}
 			/>
-		</div>
+		</div> -->
 		<div class="flex justify-evenly">
 			<div>
 				<label class="py-2 text-primary-foreground" for="vegan">Vegano</label>
