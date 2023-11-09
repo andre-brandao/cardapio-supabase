@@ -5,7 +5,7 @@ import type { Database } from '$lib/supabase-types';
 
 export const load = async ({ fetch, data, depends }) => {
 	depends('supabase:auth');
-
+	
 	const supabase = createSupabaseLoadClient<Database>({
 		supabaseUrl: PUBLIC_SUPABASE_URL,
 		supabaseKey: PUBLIC_SUPABASE_ANON_KEY,

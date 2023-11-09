@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 
-import { supabase } from '$lib/supabase';
+// import { supabase } from '$lib/supabase';
 
 function getIdString(id: string): string {
 	const idMap = new Map<string, string>([
@@ -16,13 +16,19 @@ function getIdString(id: string): string {
 
 	return idMap.get(id) || 'Invalid ID';
 }
-export const load = (async ({ params }) => {
+export const load = (async ({ params, locals }) => {
 	const identificador = getIdString(params.id);
+
+	const supabase = locals.supabase;
 
 	const { data: clientes, error } = await supabase
 		.from('clientes')
 		.select('*')
 		.eq('mesa', identificador);
+
+	if (error) {
+		console.error(error);
+	}
 
 	return {
 		clientes: clientes ?? [],

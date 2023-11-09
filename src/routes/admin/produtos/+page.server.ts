@@ -1,17 +1,43 @@
 import type { PageServerLoad } from './$types';
-import { supabase } from '$lib/supabase';
+// import { supabase } from '$lib/supabase';
 // import { z } from 'zod';
 // import { fail } from '@sveltejs/kit';
 
 // import { produtoSchema } from '$lib/schemas';
 
-export const load = (async () => {
+export const load = (async ({ locals }) => {
+	const supabase = locals.supabase;
+	// insertProdutos(supabase)
 	const { data } = await supabase.from('produtos').select();
-
 	return {
 		produtos: data ?? []
 	};
 }) satisfies PageServerLoad;
+
+
+// import prodJSON from '$lib/produtos.json';
+// async function insertProdutos(supabase) {
+// 	for (const produto of prodJSON) {
+// 		// console.log(produto);
+
+// 		//ts-ignore
+// 		// const preco = parseFloat(produto.preco) * 100;
+// 		console.log(produto);
+
+// 		await supabase.from('produtos').insert({
+// 			categoria: produto.categoria,
+
+// 			descricao: produto.descricao,
+
+// 			image_url: produto.url,
+// 			nome: produto.nome,
+// 			preco_in_cents: parseFloat(produto.preco) * 100,
+// 			sub_categoria: produto.subcategoria,
+// 			vegan: produto.vegano,
+// 			visible: produto.visivel
+// 		});
+// 	}
+//}
 
 // export const actions = {
 // 	default: async (request) => {

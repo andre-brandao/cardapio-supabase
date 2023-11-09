@@ -1,15 +1,15 @@
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async (event) => {
-	const supabase = event.locals.supabase;
-	const clienteID = event.params.id;
+export const load = (async ({ params, locals }) => {
+	const supabase = locals.supabase;
+	const clienteID = params.id;
 	const { data: cliente, error } = await supabase
 		.from('clientes')
 		.select()
 		.eq('id', clienteID)
 		.single();
-	
-        if (error) {
+
+	if (error) {
 		console.log(error);
 	}
 

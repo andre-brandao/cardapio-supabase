@@ -2,20 +2,25 @@
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 import type { Handle } from '@sveltejs/kit';
-import { dev } from '$app/environment';
+// import { dev } from '$app/environment';
 export const handle: Handle = async ({ event, resolve }) => {
-	let url;
-	let key;
-	if (dev) {
-		key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
-		url = 'postgresql://postgres:postgres@localhost:54322/postgres';
-	} else {
-		key = PUBLIC_SUPABASE_ANON_KEY;
-		url = PUBLIC_SUPABASE_URL;
-	}
+	// let url;
+	// let key;
+	// if (dev) {
+	// 	key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+	// 	url = 'http://localhost:54321';
+	// } else {
+	// 	key = PUBLIC_SUPABASE_ANON_KEY;
+	// 	url = PUBLIC_SUPABASE_URL;
+	// }
+	// event.locals.supabase = createSupabaseServerClient({
+	// 	supabaseUrl: 'http://localhost:54321',
+	// 	supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0',
+	// 	event
+	// });
 	event.locals.supabase = createSupabaseServerClient({
-		supabaseUrl: url,
-		supabaseKey: key,
+		supabaseUrl: PUBLIC_SUPABASE_URL,
+		supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
 		event
 	});
 

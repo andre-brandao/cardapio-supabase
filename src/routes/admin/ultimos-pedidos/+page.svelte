@@ -38,7 +38,6 @@
 				pedidos = pedidoSUb ?? [];
 			})
 			.subscribe();
-
 	});
 
 	onDestroy(() => {
@@ -46,11 +45,11 @@
 	});
 </script>
 
-<main class="mt-5 mb-20">
+<main class="">
 	<!-- print pedidos -->
-	{#each pedidos as pedido}
-		<div class="grid grid-cols-2 gap-4">
+	<div class="grid grid-cols-[repeat(auto-fill,minmax(400px,1fr))] gap-4">
+		{#each pedidos as pedido}
 			<CardPedido {...pedido} {supabase} {session} />
-		</div>
-	{/each}
+		{/each}
+	</div>
 </main>

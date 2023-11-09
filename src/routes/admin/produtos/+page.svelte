@@ -32,9 +32,9 @@
 			});
 	}
 
-	import prodJSON from '$lib/produtos.json';
-	let { supabase } = data;
-	$: ({ supabase } = data);
+	// import prodJSON from '$lib/produtos.json';
+	// let { supabase } = data;
+	// $: ({ supabase } = data);
 	// async function insertProdutos() {
 	// 	for (const produto of prodJSON) {
 	// 		// console.log(produto);

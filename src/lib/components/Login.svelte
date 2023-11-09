@@ -2,9 +2,11 @@
 <script lang="ts">
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { redirect } from '@sveltejs/kit';
-
+	// import {supabase} from 	'$'
 
     export let supabase:SupabaseClient
+
+	// import type { LayoutData } from ''
 	// export let data;
 	// let { supabase } = data;
 	// $: ({ supabase } = data);
@@ -40,6 +42,8 @@
 	const handleSignOut = async () => {
 		await supabase.auth.signOut();
 	};
+
+	
 </script>
 
 <main class="text-foreground bg-card p-3 rounded-sm">
@@ -54,7 +58,8 @@
 	<!-- </form> -->
 
 	<button class="bg-green-300" on:click={handleSignIn}>Log in</button>
-	<!-- <button class="bg-red-300" on:click={handleSignOut}>Log out</button> -->
+
+	<button class="bg-red-300" on:click={handleSignUp}>Sign up</button>
 </main>
 
 <style>

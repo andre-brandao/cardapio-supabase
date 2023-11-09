@@ -4,17 +4,17 @@
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import type { Session } from '@supabase/supabase-js';
 
-    export let session: Session
+	export let session: Session;
 
-	export let  supabase :any;
+	export let supabase: any;
 
 	export let id: number;
 	export let status: string;
 	export let created_at: string;
 	export let updated_by: string | null;
-    export let total_in_cents: number;
-    export let quantidade: number;
-    export let observacao: string;
+	export let total_in_cents: number;
+	export let quantidade: number;
+	export let observacao: string;
 
 	export let produtos: {
 		id: number;
@@ -27,14 +27,17 @@
 	export let clientes: {
 		id: number;
 		nome: string;
-mesa: string;
-        telefone: string;
+		mesa: string;
+		telefone: string;
 		created_at: string;
 	};
 	async function updateStatus(status: string, id: number) {
-        console.log(id);
-        
-		const response = await supabase.from('pedidos').update({ status , updated_by: session.user.id}).match({ id });
+		console.log(id);
+
+		const response = await supabase
+			.from('pedidos')
+			.update({ status, updated_by: session.user.id })
+			.match({ id });
 
 		console.log(response);
 	}
@@ -58,7 +61,7 @@ mesa: string;
 			<div class="flex justify-around">
 				<div>
 					{produtos.nome}
-                    Quantidade: {quantidade}
+					Quantidade: {quantidade}
 				</div>
 			</div>
 		</Card.Title>
@@ -72,12 +75,12 @@ mesa: string;
 				</p>
 				<!-- {#if entregador}
                     {/if} -->
-					<p>
-						id:{id}
-					</p>
-					<p>
-						alterado:{updated_by}
-					</p>
+				<p>
+					id:{id}
+				</p>
+				<p>
+					alterado:{updated_by}
+				</p>
 			</div>
 		</Card.Description>
 	</Card.Header>
