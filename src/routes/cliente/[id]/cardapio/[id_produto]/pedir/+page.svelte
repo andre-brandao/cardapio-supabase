@@ -7,7 +7,7 @@
 
 	import { superForm } from 'sveltekit-superforms/client';
 
-	const { form, errors, constraints, enhance } = superForm(data.form);
+	const { form, errors, constraints, enhance } = superForm(data.form, { taintedMessage: null });
 	$form.quantidade = 1;
 </script>
 
@@ -77,7 +77,7 @@
 	</div>
 	<div class="grid grid-cols-1 gap-4">
 		<button
-			class="p-4 text-lg font-bold inline-flex items-center justify-center rounded-md  ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
+			class="p-4 text-lg font-bold inline-flex items-center justify-center rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
 			>Pedir</button
 		>
 		<!-- {#if $page.params.id}
