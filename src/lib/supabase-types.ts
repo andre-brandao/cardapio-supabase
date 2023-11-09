@@ -97,6 +97,42 @@ export interface Database {
           }
         ]
       }
+      pedido_adicional: {
+        Row: {
+          adicional_id: number
+          created_at: string
+          id: number
+          pedido_id: number
+        }
+        Insert: {
+          adicional_id: number
+          created_at?: string
+          id?: number
+          pedido_id: number
+        }
+        Update: {
+          adicional_id?: number
+          created_at?: string
+          id?: number
+          pedido_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pedido_adicional_adicional_id_fkey"
+            columns: ["adicional_id"]
+            isOneToOne: false
+            referencedRelation: "adicional"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedido_adicional_pedido_id_fkey"
+            columns: ["pedido_id"]
+            isOneToOne: false
+            referencedRelation: "pedidos"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       pedidos: {
         Row: {
           cliente_id: string

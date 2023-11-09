@@ -1,13 +1,20 @@
 <script lang="ts">
 	import CardProduto from '$lib/cards/CardProduto.svelte';
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import type { PageData } from './$types';
 	import { Minus, Plus } from 'lucide-svelte';
 
 	export let data: PageData;
 
-	import { superForm } from 'sveltekit-superforms/client';
+	const produto = data.produto;
 
-	const { form, errors, constraints, enhance } = superForm(data.form, { taintedMessage: null });
+	import { superForm } from 'sveltekit-superforms/client';
+	$: console.log(data.produto);
+
+	const { form, errors, constraints, enhance } = superForm(data.form, {
+		taintedMessage: null,
+		dataType: 'json'
+	});
 	$form.quantidade = 1;
 </script>
 
@@ -26,7 +33,7 @@
 			bind:value={$form.sub_categoria}
 		/>
 	</div> -->
-
+	<SuperDebug data={$form} />
 	<div class="text-center">
 		<label class="py-2 text-primary-foreground" for="observacao">Observação</label>
 		<textarea
@@ -75,9 +82,40 @@
 			</button>
 		</div>
 	</div>
+	<div>
+		<div class="py-2 text-primary-foreground text-center font-bold " >Adicionais</div>
+		{#each produto?.adicional ?? [] as adicional}
+			<div class="flex flex-row justify-between">
+				<label class="py-2 text-primary-foreground" for={'adicional-' + adicional.nome}
+					>{adicional.nome}</label
+				>
+				<div class="flex flex-row">
+					<label class="py-2 text-primary-foreground mr-2" for={'adicional-' + adicional.preco_in_cents}
+					>R${adicional.preco_in_cents}</label
+				>
+					<input
+						class=""
+						type="checkbox"
+						id={'adicional-' + adicional.nome}
+						name={'adicional-' + adicional.nome}
+						on:click={(e) => {
+							adicional.id;
+							if ($form.adicional.includes(adicional.id)) {
+								$form.adicional = $form.adicional.filter((id) => id !== adicional.id);
+							} else {
+								$form.adicional = [...$form.adicional, adicional.id];
+							}
+						}}
+					/>
+				</div>
+				<!-- bind:checked={$form.vegan} -->
+			</div>
+			<!-- content here -->
+		{/each}
+	</div>
 	<div class="grid grid-cols-1 gap-4">
 		<button
-			class="p-4 text-lg font-bold inline-flex items-center justify-center rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
+			class="p-4 mb-20 text-lg font-bold inline-flex items-center justify-center rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
 			>Pedir</button
 		>
 		<!-- {#if $page.params.id}

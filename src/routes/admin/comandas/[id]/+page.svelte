@@ -22,7 +22,11 @@
 </script>
 
 {#if data.cliente}
-	<CardCliente {...data.cliente} />
+	<div class="flex flex-row">
+		<a href={`/cliente/${data.cliente.id}/cardapio`}>
+			<CardCliente {...data.cliente} />
+		</a>
+	</div>
 {/if}
 
 <main class="mt-5 mb-20">

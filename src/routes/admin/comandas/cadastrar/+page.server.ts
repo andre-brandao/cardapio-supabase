@@ -16,8 +16,8 @@ export const actions = {
 		console.log(form.data);
 
 		if (!form.valid) {
-            console.log(form);
-            
+			console.log(form);
+
 			return fail(400, {
 				form
 			});

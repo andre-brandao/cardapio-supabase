@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import Login from '$lib/components/Login.svelte';
 	import { page } from '$app/stores';
+	import Transition from '$lib/components/Transition.svelte';
 
 	export let data: LayoutData;
 	//   export let data
@@ -55,7 +56,10 @@
 		<p class="text-white">Bem vindo {data.session.user.email}</p>
 	</nav>
 	<!-- content here -->
-	<slot />
+	<Transition>
+
+		<slot />
+	</Transition>
 {:else}
 	<div class="flex justify-center items-center h-screen">
 		<Login {supabase} />

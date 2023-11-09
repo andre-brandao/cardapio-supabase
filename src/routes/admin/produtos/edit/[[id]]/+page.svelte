@@ -5,9 +5,12 @@
 	import type { PageData } from './$types';
 	import { maskify } from '$lib/mask';
 	import { page } from '$app/stores';
+	import { PlusCircle, Trash2 } from 'lucide-svelte';
 	export let data: PageData;
 
-	const { form, errors, constraints, enhance } = superForm(data.form);
+	const { form, errors, constraints, enhance } = superForm(data.form, {
+		dataType: 'json'
+	});
 	let { supabase } = data;
 	$: ({ supabase } = data);
 
@@ -47,7 +50,11 @@
 	}
 
 	async function deleteProduct() {
-		const response = await supabase.from('produtos').delete().match({ id: $page.params.id }).single();
+		const response = await supabase
+			.from('produtos')
+			.delete()
+			.match({ id: $page.params.id })
+			.single();
 		console.log(response);
 	}
 
@@ -68,9 +75,44 @@
 	// 		priceFormated = (parseInt(cleanedInput, 10) / 100).toString();
 	// 	}
 	// };
+
+	let novoAdicionalNome = '';
+	let novoAcionalPreco = 0;
+	function adicionarAdicional() {
+		let prodID: number | undefined = parseInt($page.params.id);
+		if (isNaN(prodID)) {
+			prodID = undefined;
+		}
+		if (novoAdicionalNome.length === 0) {
+			return;
+		}
+		$form.adicional = [
+			...$form.adicional,
+			{
+				nome: novoAdicionalNome,
+				preco_in_cents: novoAcionalPreco,
+				produto_id: prodID
+			}
+		];
+		// $form.adicional.push({ nome: novoAdicional, preco_in_cents: 0 });
+		console.log($form.adicional);
+
+		novoAdicionalNome = '';
+		novoAcionalPreco = 0;
+	}
+	async function deleteAdicional(adicionalID: number) {
+		const response = await supabase
+			.from('adicional')
+			.delete()
+			.match({ id: adicionalID })
+			.select('*')
+			.single();
+		console.log(response);
+	}
 </script>
 
 <main class="flex flex-col items-center">
+	<SuperDebug data={$form} />
 	<div class="grid grid-cols-4 text-right gap-4 pb-10">
 		<!-- <SuperDebug data={$form} /> -->
 		<img
@@ -107,6 +149,7 @@
 				class="col-span-3 bg-accent flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 				id="nome"
 				name="nome"
+				placeholder="Nome do Produto"
 				aria-invalid={$errors.nome ? 'true' : undefined}
 				{...$constraints.nome}
 				bind:value={$form.nome}
@@ -119,6 +162,7 @@
 				class="col-span-3 bg-accent flex w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 				id="descricao"
 				name="descricao"
+				placeholder="Descrição do Produto"
 				aria-invalid={$errors.descricao ? 'true' : undefined}
 				{...$constraints.descricao}
 				bind:value={$form.descricao}
@@ -144,11 +188,87 @@
 				class="col-span-3 bg-accent flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 				id="categoria"
 				name="categoria"
+				placeholder="Categoria do Produto"
 				aria-invalid={$errors.categoria ? 'true' : undefined}
 				{...$constraints.categoria}
 				bind:value={$form.categoria}
 			/>
 		</div>
+
+		<div class="grid grid-cols-4 text-right gap-4">
+			<label class="py-2 text-primary-foreground" for="novo-adicional">Adicionais</label>
+			<div class="col-span-3 flex flex-row justify-between flex-wrap">
+				<input
+					type="text"
+					class=" bg-accent h-10 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+					id="novo-adicional"
+					name="novo-adicional"
+					placeholder="Nome do Adicional"
+					bind:value={novoAdicionalNome}
+				/>
+				<div class="flex flex-row">
+					<div class="text-primary-foreground h-10 py-2 px-2">R$</div>
+					<input
+						type="number"
+						class="col-span-1 bg-accent h-10 w-20 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						id="novo-adicional"
+						name="novo-adicional"
+						bind:value={novoAcionalPreco}
+					/>
+				</div>
+				<button
+					type="button"
+					class="bg-green-300 items-center rounded-full p-2"
+					on:click={() => {
+						adicionarAdicional();
+					}}
+					><div class="flex">
+						<PlusCircle />Add
+					</div>
+				</button>
+			</div>
+		</div>
+		{#each $form.adicional as _, i}
+			<div class="grid grid-cols-4 text-right gap-4">
+				<span />
+				<div class="col-span-3 flex flex-row justify-between flex-wrap">
+					<input
+						type="text"
+						class=" bg-accent h-10 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						id="novo-adicional"
+						name="novo-adicional"
+						placeholder="Nome do Novo Adicional"
+						bind:value={$form.adicional[i].nome}
+					/>
+					<div class="flex flex-row">
+						<div class="text-primary-foreground h-10 py-2 px-2">R$</div>
+						<input
+							type="number"
+							class="col-span-1 bg-accent h-10 w-20 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+							id="novo-adicional"
+							name="novo-adicional"
+							bind:value={$form.adicional[i].preco_in_cents}
+						/>
+					</div>
+					<button
+						type="button"
+						class="bg-red-300 items-center rounded-full p-2"
+						on:click={() => {
+							let existeID = $form.adicional[i].id;
+							if (existeID) {
+								deleteAdicional(existeID);
+							}
+							$form.adicional.splice(i, 1);
+							$form.adicional = $form.adicional;
+						}}
+						><div class="flex">
+							<Trash2 />Del
+						</div>
+					</button>
+				</div>
+			</div>
+		{/each}
+
 		<!-- <div class="grid grid-cols-4 text-right gap-4">
 			<label class="py-2 text-primary-foreground" for="subcategoria">Sub Categoria</label>
 			<input

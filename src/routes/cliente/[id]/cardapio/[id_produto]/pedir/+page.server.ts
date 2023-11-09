@@ -1,17 +1,14 @@
-import { z } from 'zod';
 import type { PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms/server';
 import { fail, redirect } from '@sveltejs/kit';
+import { pedidoSchema } from '$lib/schemas';
 
-const pedidoSchema = z.object({
-	observacao: z.string().optional(),
-	quantidade: z.number().min(1)
-});
+
 export const load = (async (event) => {
 	const form = await superValidate(event, pedidoSchema);
 	const { data, error } = await event.locals.supabase
 		.from('produtos')
-		.select()
+		.select('*, adicional(*)')
 		.eq('id', event.params.id_produto)
 		.single();
 	if (error) {
