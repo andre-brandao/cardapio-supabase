@@ -3,7 +3,6 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { fail, redirect } from '@sveltejs/kit';
 import { pedidoSchema } from '$lib/schemas';
 
-
 export const load = (async (event) => {
 	const form = await superValidate(event, pedidoSchema);
 	const { data, error } = await event.locals.supabase
@@ -35,14 +34,35 @@ export const actions = {
 			});
 		}
 
-		const data = {
-			...form.data,
+		const novoPedido = {
 			produto: pordutoID,
-			cliente_id: clienteID
+			cliente_id: clienteID,
+			quantidade: form.data.quantidade,
+			observacao: form.data.observacao
 		};
 
-		const { data: pedido, error } = await supabase.from('pedidos').insert(data).select();
+		const adicional = form.data.adicional;
+		console.log(adicional);
 
+		const { data: pedido, error } = await supabase
+			.from('pedidos')
+			.insert(novoPedido)
+			.select('*')
+			.single();
+		console.log(pedido?.id);
+
+		// create new pedido_adicional
+		if (pedido?.id) {
+			const response = await supabase.from('pedido_adicional').insert(
+				adicional.map((adicional_id: number) => {
+					return {
+						adicional_id,
+						pedido_id: pedido.id
+					};
+				})
+			);
+			console.log(response);
+		}
 		console.log(pedido);
 
 		if (error) {
@@ -50,8 +70,7 @@ export const actions = {
 			// 	error
 			// });
 			console.log(error);
-		}
-		else{
+		} else {
 			throw redirect(303, `/cliente/${clienteID}/cardapio`);
 		}
 

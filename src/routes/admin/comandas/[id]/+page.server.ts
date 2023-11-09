@@ -9,7 +9,7 @@ export const load = (async (event) => {
 
 	const { data: pedidos, error } = await supabase
 		.from('pedidos')
-		.select('*, produtos (*)')
+		.select('*, produtos (*), adicional(*)')
 		.eq('cliente_id', clienteID);
 
 	if (error) {

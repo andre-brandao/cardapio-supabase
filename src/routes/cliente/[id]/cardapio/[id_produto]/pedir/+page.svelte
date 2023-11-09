@@ -9,6 +9,7 @@
 	const produto = data.produto;
 
 	import { superForm } from 'sveltekit-superforms/client';
+	import { formatPrice } from '$lib/utils';
 	$: console.log(data.produto);
 
 	const { form, errors, constraints, enhance } = superForm(data.form, {
@@ -83,16 +84,18 @@
 		</div>
 	</div>
 	<div>
-		<div class="py-2 text-primary-foreground text-center font-bold " >Adicionais</div>
+		<div class="py-2 text-primary-foreground text-center font-bold">Adicionais</div>
 		{#each produto?.adicional ?? [] as adicional}
 			<div class="flex flex-row justify-between">
 				<label class="py-2 text-primary-foreground" for={'adicional-' + adicional.nome}
 					>{adicional.nome}</label
 				>
 				<div class="flex flex-row">
-					<label class="py-2 text-primary-foreground mr-2" for={'adicional-' + adicional.preco_in_cents}
-					>R${adicional.preco_in_cents}</label
-				>
+					<label
+						class="py-2 text-primary-foreground mr-2"
+						for={'adicional-' + adicional.preco_in_cents}
+						>R${formatPrice(adicional.preco_in_cents)}</label
+					>
 					<input
 						class=""
 						type="checkbox"

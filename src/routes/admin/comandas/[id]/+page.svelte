@@ -46,6 +46,10 @@
 				<div>
 					<p>Status: {pedido.status}</p>
 					<p>Observação:{pedido.observacao}</p>
+					<p>Adicional:</p>
+					{#each pedido.adicional as item}
+						<p>{item.nome}</p>
+					{/each}
 				</div>
 			</div>
 		</div>

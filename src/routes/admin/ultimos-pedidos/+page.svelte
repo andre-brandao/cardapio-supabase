@@ -32,13 +32,17 @@
 			.on('postgres_changes', { event: '*', schema: 'public', table: 'pedidos' }, async () => {
 				const { data: pedidoSUb, error } = await supabase
 					.from('pedidos')
-					.select('*, produtos (*), clientes(*)')
+					.select('*, produtos (*), clientes(*), adicional(*)')
+					.neq('status', 'Entregue')
 					.order('created_at', { ascending: false });
 				// .neq('status', 'Entregue');
 				pedidos = pedidoSUb ?? [];
 			})
 			.subscribe();
+			
 	});
+	// log all pedidos that contain a adicional
+	$: console.log(pedidos.filter((pedido) => pedido.adicional));
 
 	onDestroy(() => {
 		realtimePedidos?.unsubscribe();
