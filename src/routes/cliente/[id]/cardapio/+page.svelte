@@ -7,7 +7,7 @@
 	import { goto } from '$app/navigation';
 
 	export let data: PageData;
-	const produtos = data.produtos;
+	const produtos = data.produtos ?? [];
 	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))];
 
 	function produtosFrom(categoria: string) {

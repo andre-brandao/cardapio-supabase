@@ -2,7 +2,7 @@
 	import CardProduto from '$lib/cards/CardProduto.svelte';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import type { PageData } from './$types';
-	import { Minus, Plus } from 'lucide-svelte';
+	import { Loader, Loader2, Minus, Plus } from 'lucide-svelte';
 
 	export let data: PageData;
 
@@ -12,9 +12,11 @@
 	import { formatPrice } from '$lib/utils';
 	$: console.log(data.produto);
 
-	const { form, errors, constraints, enhance } = superForm(data.form, {
+	const { form, errors, constraints, enhance, delayed, timeout } = superForm(data.form, {
 		taintedMessage: null,
-		dataType: 'json'
+		dataType: 'json',
+		delayMs: 500,
+		timeoutMs: 10000
 	});
 	$form.quantidade = 1;
 </script>
@@ -34,7 +36,7 @@
 			bind:value={$form.sub_categoria}
 		/>
 	</div> -->
-	<SuperDebug data={$form} />
+	<!-- <SuperDebug data={$form} /> -->
 	<div class="text-center">
 		<label class="py-2 text-primary-foreground" for="observacao">Observação</label>
 		<textarea
@@ -118,9 +120,19 @@
 	</div>
 	<div class="grid grid-cols-1 gap-4">
 		<button
+			disabled={$delayed}
 			class="p-4 mb-20 text-lg font-bold inline-flex items-center justify-center rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
-			>Pedir</button
 		>
+			{#if $delayed}
+				<div class="animate-spin">
+					<!-- <Loader /> -->
+					<Loader2 />
+				</div>
+			{:else}
+				Pedir
+			{/if}
+		</button>
+
 		<!-- {#if $page.params.id}
 			<button
 				type="button"

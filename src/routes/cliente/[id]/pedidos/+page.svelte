@@ -5,7 +5,7 @@
 
 	export let data: PageData;
 
-	const pedidos = data.pedidos;
+	const pedidos = data.pedidos ?? [];
 
 	function getColor(str: string) {
 		if (str === 'Entregue') {
@@ -19,10 +19,19 @@
 		}
 		return 'bg-gray-300';
 	}
+	
 </script>
 
 {#if data.cliente}
 	<CardCliente {...data.cliente} />
+	<!-- <button on:click={()=>{
+		if (!data.cliente) {
+			console.log('cliente não encontrado');
+			
+			return
+		}
+		window.location.href = `/checkout/${data.cliente.id}`
+	}} class=" bg-red-400 p-3">checkout</button> -->
 {/if}
 
 <main class="mt-5 mb-20">
