@@ -29,7 +29,7 @@ export const clienteSchema = z.object({
 });
 
 export const pedidoSchema = z.object({
-	observacao: z.string(),
+	observacao: z.string().optional(),
 	quantidade: z.number().min(1),
 
 	adicional: z.number().array()

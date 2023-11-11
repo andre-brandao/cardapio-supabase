@@ -1,11 +1,35 @@
 <script lang="ts">
 	import CardCliente from '$lib/cards/CardCliente.svelte';
 	import { formatPrice } from '$lib/utils';
+	import { redirect } from '@sveltejs/kit';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
-	const pedidos = data.pedidos ?? [];
+	let pedidos = data.pedidos ?? [];
+
+	// sort pedidos by status 1 entregue 2 em preparo 3 cancelado
+	$: pedidos = pedidos.sort((a, b) => {
+		if (a.status === 'Entregue') {
+			return -1;
+		}
+		if (b.status === 'Entregue') {
+			return 1;
+		}
+		if (a.status === 'Em Preparo') {
+			return -1;
+		}
+		if (b.status === 'Em Preparo') {
+			return 1;
+		}
+		if (a.status === 'Cancelado') {
+			return -1;
+		}
+		if (b.status === 'Cancelado') {
+			return 1;
+		}
+		return 0;
+	});
 
 	function getColor(str: string) {
 		if (str === 'Entregue') {
@@ -19,19 +43,28 @@
 		}
 		return 'bg-gray-300';
 	}
-	
+
+	$: idCLiente = data.cliente?.id;
+
+	const checkout = async () => {
+		// const resp = await fetch(`/cliente/${idCLiente}/checkout`);
+		// const data = await resp.json();
+		// console.log(data);
+
+		throw redirect(303, `/cliente/${idCLiente}/checkout`);
+	};
 </script>
 
 {#if data.cliente}
 	<CardCliente {...data.cliente} />
-	<!-- <button on:click={()=>{
-		if (!data.cliente) {
-			console.log('cliente não encontrado');
-			
-			return
-		}
-		window.location.href = `/checkout/${data.cliente.id}`
-	}} class=" bg-red-400 p-3">checkout</button> -->
+	<a href={`/cliente/${idCLiente}/checkout`}>
+		<button
+			on:click={() => {
+				// checkout();
+			}}
+			class=" bg-red-400 p-3">checkout</button
+		>
+	</a>
 {/if}
 
 <main class="mt-5 mb-20">

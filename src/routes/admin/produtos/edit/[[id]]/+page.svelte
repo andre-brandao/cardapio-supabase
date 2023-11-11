@@ -25,6 +25,10 @@
 	}
 
 	function generateFileName() {
+		if ($form.nome.length > 0) {
+			return removeSpecialCharacters($form.nome) + '.png';
+		}
+
 		const date = new Date();
 		const timestamp = date.getTime();
 		const random = Math.floor(Math.random() * 1000000);
@@ -34,7 +38,9 @@
 
 	async function uploadFile(e: any) {
 		uploading = true;
-		const file = e.target.files[0];
+		// const file = e.target.files[0];
+
+		const file = await resizeImage(e.target.files[0]);
 		previewURL = URL.createObjectURL(file);
 
 		const fileName = generateFileName();
@@ -49,6 +55,62 @@
 
 		$form.image_url = url.publicUrl;
 		console.log('upload concluido ' + url.publicUrl);
+	}
+
+	async function resizeImage(file: File): Promise<File> {
+		return new Promise((resolve) => {
+			const reader = new FileReader();
+
+			reader.onload = (e) => {
+				const img = new Image();
+				img.src = e.target?.result as string;
+
+				img.onload = () => {
+					const canvas = document.createElement('canvas');
+					const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+					// Set the desired square size
+					const squareSize = 600;
+
+					let width = img.width;
+					let height = img.height;
+
+					let targetWidth, targetHeight;
+
+					// Calculate new dimensions while maintaining aspect ratio
+					if (width > height) {
+						targetHeight = squareSize;
+						targetWidth = (width / height) * squareSize;
+					} else {
+						targetWidth = squareSize;
+						targetHeight = (height / width) * squareSize;
+					}
+
+					// Calculate cropping dimensions to maintain aspect ratio
+					const cropX = (targetWidth - squareSize) / 2;
+					const cropY = (targetHeight - squareSize) / 2;
+
+					// Set canvas dimensions to the final square size
+					canvas.width = squareSize;
+					canvas.height = squareSize;
+
+					// Crop and draw the image to the center square
+					ctx.drawImage(img, -cropX, -cropY, targetWidth, targetHeight);
+
+					// Convert the canvas content to a Blob (resized and cropped image)
+					canvas.toBlob((blob) => {
+						const resizedFile = new File([blob as Blob], file.name, {
+							type: file.type,
+							lastModified: Date.now()
+						});
+
+						resolve(resizedFile);
+					}, file.type);
+				};
+			};
+
+			reader.readAsDataURL(file);
+		});
 	}
 
 	async function deleteProduct() {
@@ -300,7 +362,7 @@
 		<div class="grid grid-cols-2 gap-4">
 			<button
 				class="p-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
-				>Submit
+				>
 				{#if $delayed}
 					<Loader2 />
 				{:else}

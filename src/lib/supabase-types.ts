@@ -142,6 +142,7 @@ export interface Database {
           produto: number
           quantidade: number
           status: string
+          stripe_id: string | null
           total_in_cents: number
           updated_by: string | null
         }
@@ -153,6 +154,7 @@ export interface Database {
           produto?: number
           quantidade?: number
           status?: string
+          stripe_id?: string | null
           total_in_cents?: number
           updated_by?: string | null
         }
@@ -164,6 +166,7 @@ export interface Database {
           produto?: number
           quantidade?: number
           status?: string
+          stripe_id?: string | null
           total_in_cents?: number
           updated_by?: string | null
         }
@@ -180,6 +183,13 @@ export interface Database {
             columns: ["produto"]
             isOneToOne: false
             referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_stripe_id_fkey"
+            columns: ["stripe_id"]
+            isOneToOne: false
+            referencedRelation: "stripe_payment"
             referencedColumns: ["id"]
           },
           {
@@ -224,6 +234,24 @@ export interface Database {
           preco_in_cents?: number
           vegan?: boolean
           visible?: boolean
+        }
+        Relationships: []
+      }
+      stripe_payment: {
+        Row: {
+          created_at: string
+          id: string
+          total: number
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          total: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          total?: number
         }
         Relationships: []
       }
