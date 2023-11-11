@@ -4,10 +4,10 @@ export const produtoSchema = z.object({
 	id: z.number().optional(),
 	nome: z.string().min(3).max(30).trim(),
 	descricao: z.string().trim(),
-	categoria: z.string().trim(),
+	categoria: z.string().min(3).trim(),
 	// sub_categoria: z.string().trim(),
 
-	preco_in_cents: z.number(),
+	preco_in_cents: z.number().min(0),
 	image_url: z.string().min(0).trim(),
 	vegan: z.boolean(),
 	visible: z.boolean(),
@@ -29,7 +29,7 @@ export const clienteSchema = z.object({
 });
 
 export const pedidoSchema = z.object({
-	observacao: z.string().optional(),
+	observacao: z.string(),
 	quantidade: z.number().min(1),
 
 	adicional: z.number().array()

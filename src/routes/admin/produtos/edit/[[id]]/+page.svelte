@@ -112,7 +112,7 @@
 </script>
 
 <main class="flex flex-col items-center">
-	<SuperDebug data={$form} />
+	<!-- <SuperDebug data={$form} /> -->
 	<div class="grid grid-cols-4 text-right gap-4 pb-10">
 		<!-- <SuperDebug data={$form} /> -->
 		<img
