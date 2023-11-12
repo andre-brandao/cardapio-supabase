@@ -78,8 +78,15 @@ Deno.serve(async (request) => {
 				.update({ pago: 'STRIPE', status: 'Pago com STRIPE' })
 				.eq('cliente_id', cliente_id)
 				.neq('status', 'Cancelado');
-			console.log('SUPABASE RESPONSE');
+
+			const response2 = await supabase
+				.from('clientes')
+				.update({ checkout_date: new Date() })
+				.eq('id', cliente_id);
+			console.log('SUPABASE RESPONSE PEDIDOS');
 			console.log(resposnse);
+			console.log('SUPABASE RESPONSE CHECKOUT');
+			console.log(response2);
 
 			// Then define and call a function to handle the event checkout.session.completed
 			break;
