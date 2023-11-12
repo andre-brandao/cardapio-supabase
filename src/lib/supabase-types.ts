@@ -43,6 +43,7 @@ export interface Database {
       }
       clientes: {
         Row: {
+          checkout_date: string | null
           created_at: string
           id: string
           mesa: string
@@ -50,6 +51,7 @@ export interface Database {
           telefone: string
         }
         Insert: {
+          checkout_date?: string | null
           created_at?: string
           id?: string
           mesa?: string
@@ -57,6 +59,7 @@ export interface Database {
           telefone?: string
         }
         Update: {
+          checkout_date?: string | null
           created_at?: string
           id?: string
           mesa?: string
@@ -139,10 +142,10 @@ export interface Database {
           created_at: string
           id: number
           observacao: string
+          pago: string
           produto: number
           quantidade: number
           status: string
-          stripe_id: string | null
           total_in_cents: number
           updated_by: string | null
         }
@@ -151,10 +154,10 @@ export interface Database {
           created_at?: string
           id?: number
           observacao?: string
+          pago?: string
           produto?: number
           quantidade?: number
           status?: string
-          stripe_id?: string | null
           total_in_cents?: number
           updated_by?: string | null
         }
@@ -163,10 +166,10 @@ export interface Database {
           created_at?: string
           id?: number
           observacao?: string
+          pago?: string
           produto?: number
           quantidade?: number
           status?: string
-          stripe_id?: string | null
           total_in_cents?: number
           updated_by?: string | null
         }
@@ -183,13 +186,6 @@ export interface Database {
             columns: ["produto"]
             isOneToOne: false
             referencedRelation: "produtos"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pedidos_stripe_id_fkey"
-            columns: ["stripe_id"]
-            isOneToOne: false
-            referencedRelation: "stripe_payment"
             referencedColumns: ["id"]
           },
           {
@@ -234,24 +230,6 @@ export interface Database {
           preco_in_cents?: number
           vegan?: boolean
           visible?: boolean
-        }
-        Relationships: []
-      }
-      stripe_payment: {
-        Row: {
-          created_at: string
-          id: string
-          total: number
-        }
-        Insert: {
-          created_at?: string
-          id: string
-          total: number
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          total?: number
         }
         Relationships: []
       }

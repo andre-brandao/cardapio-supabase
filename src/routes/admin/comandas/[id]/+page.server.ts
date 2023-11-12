@@ -5,6 +5,7 @@ export const load = (async (event) => {
 
 	const clienteID = event.params.id;
 
+
 	console.log(clienteID);
 
 	const { data: pedidos, error } = await supabase
@@ -19,5 +20,5 @@ export const load = (async (event) => {
 
 	const { data: cliente } = await supabase.from('clientes').select().eq('id', clienteID).single();
 
-	return { pedidos: pedidos ?? [], cliente };
+	return { pedidos: pedidos ?? [], cliente, session: event.locals.getSession() };
 }) satisfies PageServerLoad;

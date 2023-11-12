@@ -9,7 +9,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
 
 const supabase = createClient(
 	Deno.env.get('SUPABASE_URL') as string,
-	Deno.env.get('SUPABASE_ANON_KEY') as string
+	Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') as string
 );
 
 const stripe = new Stripe(Deno.env.get('STRIPE_API_KEY') as string, {
@@ -70,8 +70,17 @@ Deno.serve(async (request) => {
 		case 'checkout.session.completed': {
 			const checkoutSessionCompleted = receivedEvent.data.object;
 			console.log('checkout.session.completed');
-			console.log(checkoutSessionCompleted);
-			
+			console.log('CLIENTE ID');
+			console.log(checkoutSessionCompleted.metadata.cliente_id);
+			const cliente_id = checkoutSessionCompleted.metadata.cliente_id;
+			const resposnse = await supabase
+				.from('pedidos')
+				.update({ pago: 'STRIPE', status: 'Pago com STRIPE' })
+				.eq('cliente_id', cliente_id)
+				.neq('status', 'Cancelado');
+			console.log('SUPABASE RESPONSE');
+			console.log(resposnse);
+
 			// Then define and call a function to handle the event checkout.session.completed
 			break;
 		}

@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { stripe } from '$lib/stripe';
 import { redirect } from '@sveltejs/kit';
+// import type { SupabaseClient } from '@supabase/supabase-js';
 export const load = (async ({ locals, params, url }) => {
 	const supabase = locals.supabase;
 
@@ -9,8 +10,8 @@ export const load = (async ({ locals, params, url }) => {
 	const { data, error } = await supabase
 		.from('pedidos')
 		.select('*, produtos (*)')
-		.eq('status', 'Entregue')
-		.eq('cliente_id', clienteID);
+		.eq('cliente_id', clienteID)
+		.neq('status', 'Cancelado')
 
 	if (!data) {
 		return new Response(error.message, { status: 500 });
@@ -33,8 +34,7 @@ export const load = (async ({ locals, params, url }) => {
 			quantity: 1
 		};
 	});
-	// TODO GET URL
-	// Create session
+	
 	const session = await stripe.checkout.sessions.create({
 		line_items: lineItems,
 		shipping_address_collection: {
@@ -51,6 +51,7 @@ export const load = (async ({ locals, params, url }) => {
 		}
 	});
 
+	// addStripePaymentID(supabase, session.id, clienteID);
 	console.log(session.id);
 
 	throw redirect(301, session.url ?? '');

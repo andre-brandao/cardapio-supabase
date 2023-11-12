@@ -30,6 +30,8 @@
 <Card.Root class="flex cursor-pointer hover:shadow-lg m-2">
 	<img
 		class="w-1/2 aspect-square object-cover rounded-l-lg"
+		width="200"
+		height="200"
 		src={image_url.length > 0
 			? image_url
 			: 'https://firebasestorage.googleapis.com/v0/b/svelte-cardapio.appspot.com/o/static%2Fno_image.jpg?alt=media&token=cf56867b-39f9-4419-9d6c-aa94d7ce640a'}

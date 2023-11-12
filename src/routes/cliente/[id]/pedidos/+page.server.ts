@@ -1,24 +1,22 @@
-// import type { PageServerLoad } from './$types';
+import type { PageServerLoad } from './$types';
 
-// export const load = (async (event) => {
-// 	const supabase = event.locals.supabase;
+export const load = (async (event) => {
+	const supabase = event.locals.supabase;
 
-//     const clienteID = event.params.id;
+	const clienteID = event.params.id;
 
-//     console.log(clienteID);
-    
-// 	const { data: pedidos, error } = await supabase
-// 		.from('pedidos')
-// 		.select('*, produtos (*)')
-//         .order('created_at', { ascending: false })
-// 		.eq('cliente_id', clienteID);
+	console.log(clienteID);
 
-//         if (error) {
-//             console.log(error);
-            
-//         }
-//         console.log(pedidos);
-        
+	const { data: pedidos, error } = await supabase
+		.from('pedidos')
+		.select('*, produtos (*)')
+		.order('created_at', { ascending: false })
+		.eq('cliente_id', clienteID);
 
-// 	return { pedidos: pedidos ?? [] };
-// }) satisfies PageServerLoad;
+	if (error) {
+		console.log(error);
+	}
+	console.log(pedidos);
+
+	return { pedidos: pedidos ?? [] };
+}) satisfies PageServerLoad;

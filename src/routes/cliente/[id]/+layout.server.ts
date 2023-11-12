@@ -24,18 +24,9 @@ export const load = (async ({ params, locals }) => {
 		return produtos;
 	};
 
-	const getPedidos = async () => {
-		const { data: pedidos } = await supabase
-			.from('pedidos')
-			.select('*, produtos (*)')
-			.order('created_at', { ascending: false })
-			.eq('cliente_id', clienteID);
-		return pedidos;
-	};
 
 	return {
-		cliente: await getCliente(),
-		pedidos: await getPedidos(),
-		produtos: await getProdutos()
+		cliente:  getCliente(),
+		produtos:  getProdutos()
 	};
 }) satisfies LayoutServerLoad;

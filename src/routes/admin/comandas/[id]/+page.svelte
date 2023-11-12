@@ -5,8 +5,18 @@
 
 	export let data: PageData;
 
-	const pedidos = data.pedidos;
-
+	let pedidos = data.pedidos;
+	// sort pedidos by status 1 em preparo 2 pendente 3 entregue 4 cancelado
+	$: pedidos = pedidos.sort((a, b) => {
+		const order = {
+			'Em Preparo': 1,
+			Pendente: 2,
+			Entregue: 3,
+			Cancelado: 4
+		};
+		// @ts-ignore
+		return order[a.status] - order[b.status];
+	});
 	function getColor(str: string) {
 		if (str === 'Entregue') {
 			return 'bg-green-500';
@@ -19,6 +29,47 @@
 		}
 		return 'bg-gray-300';
 	}
+
+	let { supabase } = data;
+	$: ({ supabase } = data);
+	async function checkout() {
+		supabase
+			.from('clientes')
+			.update({ checkout_date: new Date().toJSON() })
+			.eq('id', data.cliente!.id);
+	}
+
+	async function cancelarPedido(id: number) {
+		const response = await supabase
+			.from('pedidos')
+			.update({ status: 'Cancelado', updated_by: data.session!.user.id })
+			.match({ id });
+
+		console.log(response);
+
+		pedidos.forEach((pedido) => {
+			if (pedido.id === id) {
+				pedido.status = 'Cancelado';
+			}
+		});
+		pedidos = [...pedidos];
+	}
+
+	async function entregarPedido(id: number) {
+		const response = await supabase
+			.from('pedidos')
+			.update({ status: 'Entregue', updated_by: data.session!.user.id })
+			.match({ id });
+
+		console.log(response);
+
+		pedidos.forEach((pedido) => {
+			if (pedido.id === id) {
+				pedido.status = 'Entregue';
+			}
+		});
+		pedidos = [...pedidos];
+	}
 </script>
 
 {#if data.cliente}
@@ -26,6 +77,12 @@
 		<a href={`/cliente/${data.cliente.id}/cardapio`}>
 			<CardCliente {...data.cliente} />
 		</a>
+		<button
+			class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+			on:click={checkout}
+		>
+			Checkout
+		</button>
 	</div>
 {/if}
 
@@ -51,6 +108,22 @@
 						<p>{item.nome}</p>
 					{/each}
 				</div>
+				<!-- buttom to cancell pedido -->
+				{#if pedido.status !== 'Cancelado' && pedido.status !== 'Entregue'}
+					<button
+						class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+						on:click={() => cancelarPedido(pedido.id)}
+					>
+						Cancelar
+					</button>
+
+					<button
+						class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+						on:click={() => entregarPedido(pedido.id)}
+					>
+						Entregar
+					</button>
+				{/if}
 			</div>
 		</div>
 	{/each}
