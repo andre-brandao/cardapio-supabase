@@ -3,7 +3,7 @@
 
 	import CardProduto from '$lib/cards/CardProduto.svelte';
 	import type { PageData } from './$types';
-	import { insertProdutos } from '$lib/old_produtcts';
+	// import { insertProdutos } from '$lib/old_produtcts';
 
 	export let data: PageData;
 	$: produtos = data.produtos.filter((prod) => {
