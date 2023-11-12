@@ -3,7 +3,6 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import type { Session } from '@supabase/supabase-js';
-	import AlertDialogCancel from '$lib/components/ui/alert-dialog/alert-dialog-cancel.svelte';
 
 	export let session: Session;
 
@@ -125,7 +124,7 @@
 						</AlertDialog.Description>
 					</AlertDialog.Header>
 					<AlertDialog.Footer>
-						<AlertDialogCancel>Cancelar</AlertDialogCancel>
+						<AlertDialog.Cancel>Cancelar</AlertDialog.Cancel>
 
 						<Button
 							class="bg-green-400 text-black"

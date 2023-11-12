@@ -70,7 +70,7 @@
 					const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 					// Set the desired square size
-					const squareSize = 600;
+					const squareSize = 360;
 
 					let width = img.width;
 					let height = img.height;

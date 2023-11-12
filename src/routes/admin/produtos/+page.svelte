@@ -3,6 +3,7 @@
 
 	import CardProduto from '$lib/cards/CardProduto.svelte';
 	import type { PageData } from './$types';
+	import { insertProdutos } from '$lib/old_produtcts';
 
 	export let data: PageData;
 	$: produtos = data.produtos.filter((prod) => {
@@ -32,34 +33,16 @@
 			});
 	}
 
-	// import prodJSON from '$lib/produtos.json';
 	// let { supabase } = data;
 	// $: ({ supabase } = data);
-	// async function insertProdutos() {
-	// 	for (const produto of prodJSON) {
-	// 		// console.log(produto);
-
-	// 		//ts-ignore
-	// 		// const preco = parseFloat(produto.preco) * 100;
-	// 		console.log(produto);
-
-	// 		await supabase.from('produtos').insert({
-	// 			categoria: produto.categoria,
-
-	// 			descricao: produto.descricao,
-
-	// 			image_url: produto.url,
-	// 			nome: produto.nome,
-	// 			preco_in_cents: parseFloat(produto.preco) * 100,
-	// 			sub_categoria: produto.subcategoria,
-	// 			vegan: produto.vegano,
-	// 			visible: produto.visivel
-	// 		});
-	// 	}
-	// }
 </script>
 
-<!-- <button on:click={insertProdutos} class="p-5 bg-red-500">INSERT</button> -->
+<!-- <button
+	on:click={() => {
+		insertProdutos(supabase);
+	}}
+	class="p-5 bg-red-500">INSERT</button
+> -->
 <main class="flex flex-col">
 	<div class=" px-2 pb-4 pt-5 gap-2 flex flex-row">
 		<a class="bg-muted p-2 rounded-sm" href="/admin/produtos/edit">Cadastrar Produto</a>

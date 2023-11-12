@@ -24,6 +24,7 @@ export const load = (async ({ params, locals }) => {
 	const { data: clientes, error } = await supabase
 		.from('clientes')
 		.select('*')
+		.is('checkout_date', null)
 		.eq('mesa', identificador);
 
 	if (error) {

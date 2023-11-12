@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import CardCliente from '$lib/cards/CardCliente.svelte';
 	import { formatPrice } from '$lib/utils';
 	import type { PageData } from './$types';
@@ -32,12 +33,7 @@
 
 	let { supabase } = data;
 	$: ({ supabase } = data);
-	async function checkout() {
-		supabase
-			.from('clientes')
-			.update({ checkout_date: new Date().toJSON() })
-			.eq('id', data.cliente!.id);
-	}
+
 
 	async function cancelarPedido(id: number) {
 		const response = await supabase
@@ -77,9 +73,25 @@
 		<a href={`/cliente/${data.cliente.id}/cardapio`}>
 			<CardCliente {...data.cliente} />
 		</a>
+
 		<button
 			class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-			on:click={checkout}
+			on:click={()=>{
+				let allow = true
+
+				pedidos.forEach((pedido) => {
+					if (pedido.status !== 'Entregue' && pedido.status !== 'Cancelado' && pedido.status !== 'Pago com STRIPE') {
+						allow = false
+					}
+				});
+
+				if (!allow) {
+					return alert('Ainda existem pedidos em aberto')
+				}
+
+
+				goto(`/admin/comandas/${data.cliente?.id}/checkout`)
+			}}
 		>
 			Checkout
 		</button>

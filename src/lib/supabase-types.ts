@@ -43,6 +43,7 @@ export interface Database {
       }
       clientes: {
         Row: {
+          checkout_by: string | null
           checkout_date: string | null
           created_at: string
           id: string
@@ -51,6 +52,7 @@ export interface Database {
           telefone: string
         }
         Insert: {
+          checkout_by?: string | null
           checkout_date?: string | null
           created_at?: string
           id?: string
@@ -59,6 +61,7 @@ export interface Database {
           telefone?: string
         }
         Update: {
+          checkout_by?: string | null
           checkout_date?: string | null
           created_at?: string
           id?: string
@@ -66,7 +69,15 @@ export interface Database {
           nome?: string
           telefone?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "clientes_checkout_by_fkey"
+            columns: ["checkout_by"]
+            isOneToOne: false
+            referencedRelation: "info_admin"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       info_admin: {
         Row: {
