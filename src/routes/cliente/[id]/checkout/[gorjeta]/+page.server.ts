@@ -12,6 +12,7 @@ export const load = (async ({ locals, params, url }) => {
 		.from('pedidos')
 		.select('*, produtos (*)')
 		.eq('cliente_id', clienteID)
+		.eq('pago', '')
 		.neq('status', 'Cancelado');
 
 	if (!data) {
@@ -22,17 +23,23 @@ export const load = (async ({ locals, params, url }) => {
 	const lineItems = data.map((item) => {
 		console.log(item);
 		total += item.total_in_cents;
+
+		const nome = item.produtos?.nome ?? 'erro nome';
+		const preco = item.total_in_cents;
+
+		const img =
+			item.produtos?.image_url.length > 1
+				? item.produtos?.image_url
+				: 'https://firebasestorage.googleapis.com/v0/b/svelte-cardapio.appspot.com/o/static%2Fno_image.jpg?alt=media&token=cf56867b-39f9-4419-9d6c-aa94d7ce640a';
+
 		return {
 			price_data: {
 				currency: 'BRL',
 				product_data: {
-					name: item.produtos?.nome ?? 'erro nome',
-					images: [
-						item.produtos?.image_url ??
-							'https://firebasestorage.googleapis.com/v0/b/svelte-cardapio.appspot.com/o/static%2Fno_image.jpg?alt=media&token=cf56867b-39f9-4419-9d6c-aa94d7ce640a'
-					]
+					name: nome,
+					images: [img]
 				},
-				unit_amount: item.total_in_cents
+				unit_amount: preco
 			},
 			quantity: 1
 		};
@@ -41,6 +48,8 @@ export const load = (async ({ locals, params, url }) => {
 	let totalGorjeta = 0;
 	if (gorjeta != '0') {
 		totalGorjeta = Math.round(total * (parseInt(gorjeta) / 100));
+		console.log('GORJETA = ' + totalGorjeta);
+
 		lineItems.push({
 			price_data: {
 				currency: 'BRL',
@@ -77,5 +86,5 @@ export const load = (async ({ locals, params, url }) => {
 
 	throw redirect(301, session.url ?? '');
 
-	// return {};
+	return {};
 }) satisfies PageServerLoad;

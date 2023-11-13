@@ -5,6 +5,7 @@
 	import type { PageData } from './$types';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { Button } from '$lib/components/ui/button';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -57,12 +58,12 @@
 
 	$: idCLiente = data.cliente?.id;
 
-	const checkout = async (gorjeta: number) => {
+	const checkout = (gorjeta: string) => {
 		// const resp = await fetch(`/cliente/${idCLiente}/checkout`);
 		// const data = await resp.json();
 		// console.log(data);
-
-		throw redirect(303, `/cliente/${idCLiente}/checkout/${gorjeta}`);
+		goto(`/cliente/${idCLiente}/checkout/${gorjeta}`);
+		//  throw redirect(303, `/cliente/${idCLiente}/checkout/${gorjeta}`);
 	};
 
 	let open = false;
@@ -91,8 +92,7 @@
 				<Button
 					class="bg-slate-500 text-black"
 					on:click={(e) => {
-						checkout(0);
-						open = false;
+						checkout('0');
 					}}
 				>
 					0%
@@ -100,8 +100,7 @@
 				<Button
 					class="bg-slate-500 text-black"
 					on:click={(e) => {
-						checkout(10);
-						open = false;
+						checkout('10');
 					}}
 				>
 					10% = R${formatPrice(total * 0.1)}
@@ -109,9 +108,8 @@
 
 				<Button
 					class="bg-slate-500 text-black"
-					on:click={(e) => {
-						checkout(20);
-						open = false;
+					on:click={async (e) => {
+						checkout('20');
 					}}
 				>
 					20% = R${formatPrice(total * 0.2)}
