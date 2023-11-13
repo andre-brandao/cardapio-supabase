@@ -27,10 +27,10 @@ export const load = (async ({ locals, params, url }) => {
 		const nome = item.produtos?.nome ?? 'erro nome';
 		const preco = item.total_in_cents;
 
-		const img =
-			item.produtos?.image_url.length > 1
-				? item.produtos?.image_url
-				: 'https://firebasestorage.googleapis.com/v0/b/svelte-cardapio.appspot.com/o/static%2Fno_image.jpg?alt=media&token=cf56867b-39f9-4419-9d6c-aa94d7ce640a';
+
+		const img = item.produtos?.image_url
+			? item.produtos?.image_url
+			: 'https://firebasestorage.googleapis.com/v0/b/svelte-cardapio.appspot.com/o/static%2Fno_image.jpg?alt=media&token=cf56867b-39f9-4419-9d6c-aa94d7ce640a';
 
 		return {
 			price_data: {
