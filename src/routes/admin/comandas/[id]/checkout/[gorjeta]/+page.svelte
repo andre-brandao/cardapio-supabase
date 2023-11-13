@@ -51,8 +51,21 @@
 			.eq('pago', '')
 			.neq('status', 'Cancelado');
 
+		let totalGorjeta = 0;
+		if ($page.params.gorjeta != '0') {
+			totalGorjeta = Math.round((parseInt($page.params.gorjeta) / 100) * total);
+		}
+
+		let response3 = await supabase.from('payment').insert({
+			cliente_id: $page.params.id,
+			total_in_cents: total + totalGorjeta,
+			total_gorjeta: totalGorjeta,
+			stripe_id: data.session?.user.email
+		});
+
 		console.log(response1);
 		console.log(response2);
+		console.log(response3);
 
 		goto('/admin/comandas');
 	}

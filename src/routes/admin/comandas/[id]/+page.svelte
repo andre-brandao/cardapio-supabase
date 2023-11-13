@@ -3,10 +3,13 @@
 	import CardCliente from '$lib/cards/CardCliente.svelte';
 	import { formatPrice } from '$lib/utils';
 	import type { PageData } from './$types';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
+	import { Button } from '$lib/components/ui/button';
 
 	export let data: PageData;
 
 	let pedidos = data.pedidos;
+	let total = 0
 	// sort pedidos by status 1 em preparo 2 pendente 3 entregue 4 cancelado
 	$: pedidos = pedidos.sort((a, b) => {
 		const order = {
@@ -33,7 +36,6 @@
 
 	let { supabase } = data;
 	$: ({ supabase } = data);
-
 
 	async function cancelarPedido(id: number) {
 		const response = await supabase
@@ -66,6 +68,29 @@
 		});
 		pedidos = [...pedidos];
 	}
+
+	function redirectCheckout(gorjeta: number) {
+		let allow = true;
+
+		pedidos.forEach((pedido) => {
+			if (
+				pedido.status !== 'Entregue' &&
+				pedido.status !== 'Cancelado' &&
+				pedido.status !== 'Pago com STRIPE'
+			) {
+				allow = false;
+			}else{
+				total += pedido.total_in_cents;
+			}
+		});
+
+		if (!allow) {
+			return alert('Ainda existem pedidos em aberto');
+		}
+
+		goto(`/admin/comandas/${data.cliente?.id}/checkout/${gorjeta}`);
+	}
+	let open = false;
 </script>
 
 {#if data.cliente}
@@ -76,25 +101,56 @@
 
 		<button
 			class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-			on:click={()=>{
-				let allow = true
-
-				pedidos.forEach((pedido) => {
-					if (pedido.status !== 'Entregue' && pedido.status !== 'Cancelado' && pedido.status !== 'Pago com STRIPE') {
-						allow = false
-					}
-				});
-
-				if (!allow) {
-					return alert('Ainda existem pedidos em aberto')
-				}
-
-
-				goto(`/admin/comandas/${data.cliente?.id}/checkout`)
-			}}
+			on:click={() => {}}
 		>
 			Checkout
 		</button>
+		<AlertDialog.Root bind:open>
+			<AlertDialog.Trigger>
+				<Button class="font-bold cursor-pointe space-x-2 bg-green-500  rounded-2xl p-3"
+					>Self-Checkout</Button
+				>
+			</AlertDialog.Trigger>
+			<AlertDialog.Content class="text-primary-foreground">
+				<AlertDialog.Header>
+					<AlertDialog.Title>Pagamento com STRIPE!</AlertDialog.Title>
+					<AlertDialog.Description class="text-primary-foreground">
+						Quanto deseja adicionar de gorjeta?
+					</AlertDialog.Description>
+				</AlertDialog.Header>
+				<AlertDialog.Footer class="gap-2">
+					<AlertDialog.Cancel class="bg-red-300">Cancelar</AlertDialog.Cancel>
+					<Button
+						class="bg-slate-500 text-black"
+						on:click={(e) => {
+							redirectCheckout(0);
+							open = false;
+						}}
+					>
+						0%
+					</Button>
+					<Button
+						class="bg-slate-500 text-black"
+						on:click={(e) => {
+							redirectCheckout(10);
+							open = false;
+						}}
+					>
+						10% = R${formatPrice(total * 0.1)}
+					</Button>
+
+					<Button
+						class="bg-slate-500 text-black"
+						on:click={(e) => {
+							redirectCheckout(20);
+							open = false;
+						}}
+					>
+						20% = R${formatPrice(total * 0.2)}
+					</Button>
+				</AlertDialog.Footer>
+			</AlertDialog.Content>
+		</AlertDialog.Root>
 	</div>
 {/if}
 

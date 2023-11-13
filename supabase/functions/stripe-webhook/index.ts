@@ -70,9 +70,16 @@ Deno.serve(async (request) => {
 		case 'checkout.session.completed': {
 			const checkoutSessionCompleted = receivedEvent.data.object;
 			console.log('checkout.session.completed');
+
 			console.log('CLIENTE ID');
 			console.log(checkoutSessionCompleted.metadata.cliente_id);
+
 			const cliente_id = checkoutSessionCompleted.metadata.cliente_id;
+
+			const total_in_cents = checkoutSessionCompleted.metadata.total_in_cents;
+
+			const total_gorjeta = checkoutSessionCompleted.metadata.total_gorjeta;
+
 			const resposnse = await supabase
 				.from('pedidos')
 				.update({ pago: 'STRIPE', status: 'Pago com STRIPE' })
@@ -83,10 +90,22 @@ Deno.serve(async (request) => {
 				.from('clientes')
 				.update({ checkout_date: new Date() })
 				.eq('id', cliente_id);
+
+			const response3 = await supabase
+				.from('payment')
+				.insert({
+					cliente_id,
+					total_in_cents,
+					total_gorjeta,
+					stripe_id: checkoutSessionCompleted.id
+				});
+
 			console.log('SUPABASE RESPONSE PEDIDOS');
 			console.log(resposnse);
 			console.log('SUPABASE RESPONSE CHECKOUT');
 			console.log(response2);
+			console.log('SUPABASE RESPONSE PAYMENT');
+			console.log(response3);
 
 			// Then define and call a function to handle the event checkout.session.completed
 			break;

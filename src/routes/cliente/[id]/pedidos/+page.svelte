@@ -3,10 +3,21 @@
 	import { formatPrice } from '$lib/utils';
 	import { redirect } from '@sveltejs/kit';
 	import type { PageData } from './$types';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
+	import { Button } from '$lib/components/ui/button';
 
 	export let data: PageData;
 
 	let pedidos = data.pedidos ?? [];
+
+	let total = 0;
+
+	$: total = pedidos.reduce((acc, pedido) => {
+		if (pedido.status !== 'Cancelado' && !pedido.status.includes('Pago')) {
+			return acc + pedido.total_in_cents;
+		}
+		return acc;
+	}, 0);
 
 	// sort pedidos by status 1 entregue 2 em preparo 3 cancelado
 	$: pedidos = pedidos.sort((a, b) => {
@@ -46,25 +57,68 @@
 
 	$: idCLiente = data.cliente?.id;
 
-	const checkout = async () => {
+	const checkout = async (gorjeta: number) => {
 		// const resp = await fetch(`/cliente/${idCLiente}/checkout`);
 		// const data = await resp.json();
 		// console.log(data);
 
-		throw redirect(303, `/cliente/${idCLiente}/checkout`);
+		throw redirect(303, `/cliente/${idCLiente}/checkout/${gorjeta}`);
 	};
+
+	let open = false;
 </script>
 
 {#if data.cliente}
 	<CardCliente {...data.cliente} />
-	<a href={`/cliente/${idCLiente}/checkout`}>
-		<button
-			on:click={() => {
-				// checkout();
-			}}
-			class=" bg-red-400 p-3">checkout</button
-		>
-	</a>
+	<div class="text-center bg-slate-400">
+		Total: R$ {formatPrice(total)}
+	</div>
+	<AlertDialog.Root bind:open>
+		<AlertDialog.Trigger>
+			<Button class="font-bold cursor-pointe space-x-2 bg-green-500  rounded-2xl p-3"
+				>Self-Checkout</Button
+			>
+		</AlertDialog.Trigger>
+		<AlertDialog.Content class="text-primary-foreground">
+			<AlertDialog.Header>
+				<AlertDialog.Title>Pagamento com STRIPE!</AlertDialog.Title>
+				<AlertDialog.Description class="text-primary-foreground">
+					Quanto deseja adicionar de gorjeta?
+				</AlertDialog.Description>
+			</AlertDialog.Header>
+			<AlertDialog.Footer class="gap-2">
+				<AlertDialog.Cancel class="bg-red-300">Cancelar</AlertDialog.Cancel>
+				<Button
+					class="bg-slate-500 text-black"
+					on:click={(e) => {
+						checkout(0);
+						open = false;
+					}}
+				>
+					0%
+				</Button>
+				<Button
+					class="bg-slate-500 text-black"
+					on:click={(e) => {
+						checkout(10);
+						open = false;
+					}}
+				>
+					10% = R${formatPrice(total * 0.1)}
+				</Button>
+
+				<Button
+					class="bg-slate-500 text-black"
+					on:click={(e) => {
+						checkout(20);
+						open = false;
+					}}
+				>
+					20% = R${formatPrice(total * 0.2)}
+				</Button>
+			</AlertDialog.Footer>
+		</AlertDialog.Content>
+	</AlertDialog.Root>
 {/if}
 
 <main class="mt-5 mb-20">

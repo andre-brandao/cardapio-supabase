@@ -111,6 +111,41 @@ export interface Database {
           }
         ]
       }
+      payment: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          id: number
+          stripe_id: string | null
+          total_gorjeta: number
+          total_in_cents: number
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          id?: number
+          stripe_id?: string | null
+          total_gorjeta: number
+          total_in_cents: number
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          id?: number
+          stripe_id?: string | null
+          total_gorjeta?: number
+          total_in_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       pedido_adicional: {
         Row: {
           adicional_id: number

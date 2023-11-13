@@ -6,19 +6,22 @@ export const load = (async ({ locals, params, url }) => {
 	const supabase = locals.supabase;
 
 	const clienteID = params.id;
+	const gorjeta = params.gorjeta;
 
 	const { data, error } = await supabase
 		.from('pedidos')
 		.select('*, produtos (*)')
 		.eq('cliente_id', clienteID)
-		.neq('status', 'Cancelado')
+		.neq('status', 'Cancelado');
 
 	if (!data) {
 		return new Response(error.message, { status: 500 });
 	}
+
+	let total = 0;
 	const lineItems = data.map((item) => {
 		console.log(item);
-
+		total += item.total_in_cents;
 		return {
 			price_data: {
 				currency: 'BRL',
@@ -34,7 +37,23 @@ export const load = (async ({ locals, params, url }) => {
 			quantity: 1
 		};
 	});
-	
+
+	let totalGorjeta = 0;
+	if (gorjeta != '0') {
+		totalGorjeta = Math.round(total * (parseInt(gorjeta) / 100));
+		lineItems.push({
+			price_data: {
+				currency: 'BRL',
+				product_data: {
+					name: `Gorjeta ${gorjeta}%`,
+					images: []
+				},
+				unit_amount: totalGorjeta
+			},
+			quantity: 1
+		});
+	}
+
 	const session = await stripe.checkout.sessions.create({
 		line_items: lineItems,
 		shipping_address_collection: {
@@ -47,7 +66,9 @@ export const load = (async ({ locals, params, url }) => {
 			enabled: true
 		},
 		metadata: {
-			cliente_id: clienteID
+			cliente_id: clienteID,
+			total_in_cents: total + totalGorjeta,
+			total_gorjeta: totalGorjeta
 		}
 	});
 
