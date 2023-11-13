@@ -1,17 +1,28 @@
 {
-  "folders": [
-    {
-      "name": "project-root",
-      "path": "./"
-    },
-    {
-      "name": "supabase-functions",
-      "path": "supabase/functions"
-    }
-  ],
-  "settings": {
-    "files.exclude": {
-      "supabase/functions/": true
-    }
-  }
+	"folders": [
+		{
+			"name": "project-root",
+			"path": "./"
+		},
+		{
+			"name": "supabase-functions",
+			"path": "supabase/functions"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"supabase/functions/": true
+		},
+		"sqltools.connections": [
+			{
+				"previewLimit": 50,
+				"server": "db.eftqpoetlueihfnlckbp.supabase.co",
+				"port": 5432,
+				"driver": "PostgreSQL",
+				"database": "postgres",
+				"username": "postgres",
+				"name": "cardapio-supabase"
+			}
+		]
+	}
 }
