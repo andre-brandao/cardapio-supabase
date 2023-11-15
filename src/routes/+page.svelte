@@ -39,10 +39,10 @@
 
 
 <script>
-	import { redirect } from "@sveltejs/kit";
+	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
 
 	onMount(()=>{
-		throw redirect(303, '/admin/produtos')
+		goto("/admin/produtos")
 	})
 </script>
