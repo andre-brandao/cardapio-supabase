@@ -5,11 +5,17 @@
 	import type { PageData } from './$types';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { Button } from '$lib/components/ui/button';
+	import { page } from '$app/stores';
 
 	export let data: PageData;
 
 	let pedidos = data.pedidos;
-	let total = 0
+	let total = data.pedidos.reduce((acc, pedido) => {
+		if (pedido.status === 'Cancelado') {
+			return acc;
+		}
+		return acc + pedido.total_in_cents;
+	}, 0);
 	// sort pedidos by status 1 em preparo 2 pendente 3 entregue 4 cancelado
 	$: pedidos = pedidos.sort((a, b) => {
 		const order = {
@@ -69,8 +75,20 @@
 		pedidos = [...pedidos];
 	}
 
-	function redirectCheckout(gorjeta: number) {
+	async function redirectCheckout(gorjeta: string) {
 		let allow = true;
+
+		if (pedidos.length === 0) {
+			console.log('Não existem pedidos, deletando cliente');
+			let response = await supabase
+				.from('clientes')
+				.update({ checkout_date: new Date().toJSON(), checkout_by: data.session!.user.id })
+				.eq('id', $page.params.id);
+			console.log(response);
+
+			goto('/admin/comandas');
+			return;
+		}
 
 		pedidos.forEach((pedido) => {
 			if (
@@ -79,7 +97,7 @@
 				pedido.status !== 'Pago com STRIPE'
 			) {
 				allow = false;
-			}else{
+			} else {
 				total += pedido.total_in_cents;
 			}
 		});
@@ -91,24 +109,27 @@
 		goto(`/admin/comandas/${data.cliente?.id}/checkout/${gorjeta}`);
 	}
 	let open = false;
+
+	$: console.log(total);
 </script>
 
 {#if data.cliente}
-	<div class="flex flex-row">
+	<div class="flex flex-row justify-between">
 		<a href={`/cliente/${data.cliente.id}/cardapio`}>
 			<CardCliente {...data.cliente} />
 		</a>
 
-		<button
+
+		<!-- <button
 			class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
 			on:click={() => {}}
 		>
 			Checkout
-		</button>
+		</button> -->
 		<AlertDialog.Root bind:open>
 			<AlertDialog.Trigger>
 				<Button class="font-bold cursor-pointe space-x-2 bg-green-500  rounded-2xl p-3"
-					>Self-Checkout</Button
+					>Checkout</Button
 				>
 			</AlertDialog.Trigger>
 			<AlertDialog.Content class="text-primary-foreground">
@@ -123,7 +144,7 @@
 					<Button
 						class="bg-slate-500 text-black"
 						on:click={(e) => {
-							redirectCheckout(0);
+							redirectCheckout('0');
 							open = false;
 						}}
 					>
@@ -132,7 +153,7 @@
 					<Button
 						class="bg-slate-500 text-black"
 						on:click={(e) => {
-							redirectCheckout(10);
+							redirectCheckout('10');
 							open = false;
 						}}
 					>
@@ -142,7 +163,7 @@
 					<Button
 						class="bg-slate-500 text-black"
 						on:click={(e) => {
-							redirectCheckout(20);
+							redirectCheckout('20');
 							open = false;
 						}}
 					>
@@ -151,6 +172,10 @@
 				</AlertDialog.Footer>
 			</AlertDialog.Content>
 		</AlertDialog.Root>
+
+		<div class="bg-white p-4 m-2">
+			Total: R$ {formatPrice(total)}
+		</div>
 	</div>
 {/if}
 

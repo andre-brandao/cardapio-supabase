@@ -11,6 +11,7 @@
 	const pedidos = data.pedidos;
 
 	let total = 0;
+	let valorGorjeta = 0;
 	let produtos: {
 		nome: string;
 		quantidade: number;
@@ -35,6 +36,10 @@
 		});
 
 		console.log(produtos);
+		if ($page.params.gorjeta != '0') {
+			valorGorjeta = Math.round((parseInt($page.params.gorjeta) / 100) * total);
+		}
+		total = total + valorGorjeta;
 	}
 	let { supabase } = data;
 	$: ({ supabase } = data);
@@ -51,15 +56,12 @@
 			.eq('pago', '')
 			.neq('status', 'Cancelado');
 
-		let totalGorjeta = 0;
-		if ($page.params.gorjeta != '0') {
-			totalGorjeta = Math.round((parseInt($page.params.gorjeta) / 100) * total);
-		}
+
 
 		let response3 = await supabase.from('payment').insert({
 			cliente_id: $page.params.id,
-			total_in_cents: total + totalGorjeta,
-			total_gorjeta: totalGorjeta,
+			total_in_cents: total ,
+			total_gorjeta: valorGorjeta,
 			stripe_id: data.session?.user.email
 		});
 
@@ -83,8 +85,10 @@
 			<p>Quantidade: {item.quantidade}</p>
 		</div>
 	{/each}
-	<div class="flex flex-row justify-center">
-		<h1 class="bg-red-300 text-center px-2 m-2 rounded-sm">Total: R$ {formatPrice(total)}</h1>
+	<div class="flex flex-col justify-center items-center">
+		<h1 class="bg-red-300 text-center px-2 m-2 rounded-sm font-bold">
+			Total: R$ {formatPrice(total)}
+		</h1>
 		<!-- <button
 			class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
 			on:click={() => {
@@ -98,7 +102,7 @@
 			<AlertDialog.Trigger>
 				<Button
 					class="font-bold cursor-pointer flex items-center space-x-2 bg-green-500  rounded-2xl p-3"
-					>Checkout</Button
+					>Encerrar Comanda Pago no Caixa</Button
 				></AlertDialog.Trigger
 			>
 			<AlertDialog.Content class="text-primary-foreground">

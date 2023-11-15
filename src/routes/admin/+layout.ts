@@ -5,7 +5,7 @@ import type { Database } from '$lib/supabase-types';
 
 export const load = async ({ fetch, data, depends }) => {
 	depends('supabase:auth');
-	
+
 	const supabase = createSupabaseLoadClient<Database>({
 		supabaseUrl: PUBLIC_SUPABASE_URL,
 		supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
@@ -16,8 +16,19 @@ export const load = async ({ fetch, data, depends }) => {
 	const {
 		data: { session }
 	} = await supabase.auth.getSession();
-	
-    // console.log(session);
 
-	return { supabase, session };
+	async function getPermAdmin() {
+		if (session === null) {
+			return null;
+		}
+		const { data } = await supabase
+			.from('info_admin')
+			.select('*')
+			.eq('id', session.user.id)
+			.single();
+		return data;
+	}
+	// console.log(session);
+
+	return { supabase, session, admin_permitions: await getPermAdmin() };
 };

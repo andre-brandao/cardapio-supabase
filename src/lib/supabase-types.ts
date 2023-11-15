@@ -83,23 +83,29 @@ export interface Database {
         Row: {
           email: string
           id: string
+          perm_comanda: boolean
           perm_editar_cardapio: boolean
           perm_editar_perms: boolean
           perm_estoque: boolean
+          perm_pedidos: boolean
         }
         Insert: {
           email?: string
           id: string
+          perm_comanda?: boolean
           perm_editar_cardapio?: boolean
           perm_editar_perms?: boolean
           perm_estoque?: boolean
+          perm_pedidos?: boolean
         }
         Update: {
           email?: string
           id?: string
+          perm_comanda?: boolean
           perm_editar_cardapio?: boolean
           perm_editar_perms?: boolean
           perm_estoque?: boolean
+          perm_pedidos?: boolean
         }
         Relationships: [
           {

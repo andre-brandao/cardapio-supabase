@@ -44,13 +44,14 @@
 	class="p-5 bg-red-500">INSERT</button
 > -->
 <main class="flex flex-col">
-	<div class=" px-2 pb-4 pt-5 gap-2 flex flex-row">
-		<a class="bg-muted p-2 rounded-sm" href="/admin/produtos/edit">Cadastrar Produto</a>
+	<div class=" px-2 pb-4 pt-5 gap-2 flex flex-row ">
+		<!-- <a class="bg-muted p-2 rounded-sm " href="/admin/produtos/edit">Cadastrar Produto</a> -->
+		<a class="bg-muted p-2 rounded-sm whitespace-nowrap" href="/admin/produtos/edit">Cadastrar Produto</a>
 		<label class="text-primary-foreground pt-2" for="search">Pesquisar: </label>
 		<input
 			id="search"
 			name="search"
-			class="bg-accent h-10 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+			class="bg-accent w-full h-10 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 			type="text"
 			bind:value={search_bar}
 		/>

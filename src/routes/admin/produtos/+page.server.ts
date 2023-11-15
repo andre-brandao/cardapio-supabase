@@ -1,3 +1,4 @@
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 // import { supabase } from '$lib/supabase';
 // import { z } from 'zod';
@@ -5,15 +6,19 @@ import type { PageServerLoad } from './$types';
 
 // import { produtoSchema } from '$lib/schemas';
 
-export const load = (async ({ locals }) => {
+export const load = (async ({ locals, parent }) => {
 	const supabase = locals.supabase;
+
+	const admin_permitions = (await parent()).admin_permitions;
+	if (!admin_permitions || !admin_permitions.perm_editar_cardapio) {
+		throw error(403, 'sem permissoes para acessar essa pagina');
+	}
 	// insertProdutos(supabase)
 	const { data } = await supabase.from('produtos').select();
 	return {
 		produtos: data ?? []
 	};
 }) satisfies PageServerLoad;
-
 
 // import prodJSON from '$lib/produtos.json';
 // async function insertProdutos(supabase) {

@@ -13,6 +13,9 @@
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
 
+	$: console.log(data.admin_permitions);
+	
+
 	onMount(() => {
 		const {
 			data: { subscription }
@@ -25,6 +28,30 @@
 		return () => subscription.unsubscribe();
 	});
 </script>
+
+<div class="flex justify-between">
+	<img
+		class="p-2 w-64 h-auto rounded-lg filter invert"
+		src="https://firebasestorage.googleapis.com/v0/b/svelte-cardapio.appspot.com/o/static%2Flogo-h-p.png?alt=media&token=a129a507-20ad-4b9e-887f-d7da1e831155"
+		alt=""
+	/>
+
+	<div class="flex justify-center items-center flex-wrap ">
+		<div class="">
+			{#if data.session}
+				<p class="text-white text-center mx-2 overflow-hidden flex-wrap">Bem vindo! {data.session.user.email?.split('@')[0]}</p>
+			{/if}
+		</div>
+		{#if data.session}
+			<button
+				class="bg-primary text-white rounded-sm px-2 mx-2 py-1 font-bold transition-colors hover:bg-red-400"
+				on:click={() => supabase.auth.signOut()}
+			>
+				Sair
+			</button>
+		{/if}
+	</div>
+</div>
 
 {#if data.session}
 	<nav class="bg-muted rounded-sm m-3 p-2 flex items-center overflow-auto space-x-4 lg:space-x-6">
@@ -52,12 +79,10 @@
 		>
 			Ultimos Pedidos
 		</a>
-		<a href="/cliente/mesa/QGRo1" class="text-white">quarto 1</a>
-		<p class="text-white">Bem vindo {data.session.user.email}</p>
+
 	</nav>
 	<!-- content here -->
 	<Transition>
-
 		<slot />
 	</Transition>
 {:else}

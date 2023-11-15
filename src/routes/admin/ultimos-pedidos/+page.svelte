@@ -6,7 +6,6 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-
 	let pedidos = data.pedidos;
 	let { supabase, session } = data;
 	$: ({ supabase } = data);

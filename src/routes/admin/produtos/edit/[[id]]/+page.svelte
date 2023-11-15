@@ -6,6 +6,7 @@
 	import { maskify } from '$lib/mask';
 	import { page } from '$app/stores';
 	import { Loader2, PlusCircle, Trash2 } from 'lucide-svelte';
+	import CardProduto from '$lib/cards/CardProduto.svelte';
 	export let data: PageData;
 
 	const { form, errors, constraints, enhance, delayed, timeout } = superForm(data.form, {
@@ -26,7 +27,7 @@
 
 	function generateFileName() {
 		if ($form.nome.length > 0) {
-			return removeSpecialCharacters($form.nome) + '.png';
+			return removeSpecialCharacters($form.nome)  + '.png';
 		}
 
 		const date = new Date();
@@ -45,10 +46,17 @@
 
 		const fileName = generateFileName();
 		//@ts-ignore
-		const { data, error } = await supabase.storage.from('produto_imgs').upload(fileName, file, {
+		const { data, error } = await supabase.storage.from('produto_imgs').update(fileName, file, {
 			cacheControl: '3600',
 			upsert: false
 		});
+
+		if (error) {
+			const { data } = await supabase.storage.from('produto_imgs').update(fileName, file, {
+				cacheControl: '3600',
+				upsert: true
+			});
+		}
 		console.log(data, error);
 		//@ts-ignore
 		const { data: url } = await supabase.storage.from('produto_imgs').getPublicUrl(fileName);
@@ -177,6 +185,9 @@
 
 <main class="flex flex-col items-center">
 	<!-- <SuperDebug data={$form} /> -->
+	<div class="w-[350px]">
+		<CardProduto {...$form} />
+	</div>
 	<div class="grid grid-cols-4 text-right gap-4 pb-10">
 		<!-- <SuperDebug data={$form} /> -->
 		<img
@@ -362,7 +373,7 @@
 		<div class="grid grid-cols-2 gap-4">
 			<button
 				class="p-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
-				>
+			>
 				{#if $delayed}
 					<Loader2 />
 				{:else}
