@@ -49,7 +49,7 @@
 		await supabase.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: $page.url.origin + '/auth/callback'
+				redirectTo: 'www.cafedavillla.com/auth/callback'
 			}
 		});
 	};
