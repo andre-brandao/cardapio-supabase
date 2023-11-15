@@ -36,3 +36,13 @@
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 <button class="bg-red-500 p-10" on:click={insertProdutos} /> -->
+
+
+<script>
+	import { redirect } from "@sveltejs/kit";
+	import { onMount } from "svelte";
+
+	onMount(()=>{
+		throw redirect(303, '/admin/produtos')
+	})
+</script>
