@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ locals: { getSession, supabase } }) => {
+export const load: LayoutServerLoad = async ({ locals: { getSession, supabase } }) => {
 	const session = await getSession();
 
 	async function getPermAdmin() {
@@ -18,4 +18,4 @@ export const load = (async ({ locals: { getSession, supabase } }) => {
 		session,
 		admin_permitions: await getPermAdmin()
 	};
-}) satisfies LayoutServerLoad;
+};

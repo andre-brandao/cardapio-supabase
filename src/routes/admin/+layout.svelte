@@ -14,19 +14,48 @@
 	$: ({ supabase, session } = data);
 
 	$: console.log(data.admin_permitions);
-	
 
 	onMount(() => {
-		const {
-			data: { subscription }
-		} = supabase.auth.onAuthStateChange((event, _session) => {
+		// const {
+		// 	data: { subscription }
+		// } = 
+
+
+		supabase.auth.onAuthStateChange((event, _session) => {
+
 			if (_session?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
 			}
+
+			if (event === 'SIGNED_OUT') {
+				// delete cookies on sign out
+				const expires = new Date(0).toUTCString();
+				document.cookie = `my-access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+				document.cookie = `my-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+			} else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+				const maxAge = 100 * 365 * 24 * 60 * 60; // 100 years, never expires
+				document.cookie = `my-access-token=${
+					_session!.access_token
+				}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
+				document.cookie = `my-refresh-token=${
+					_session!.refresh_token
+				}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
+			}
 		});
 
-		return () => subscription.unsubscribe();
+		// return () => subscription.unsubscribe();
 	});
+
+	async function handleSignOut() {
+		const resp = await supabase.auth.signOut();
+
+		location.reload();
+
+		const expires = new Date(0).toUTCString();
+		document.cookie = `my-access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+		document.cookie = `my-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+		console.log(resp);
+	}
 </script>
 
 <div class="flex justify-between">
@@ -36,16 +65,18 @@
 		alt=""
 	/>
 
-	<div class="flex justify-center items-center flex-wrap ">
+	<div class="flex justify-center items-center flex-wrap">
 		<div class="">
 			{#if data.session}
-				<p class="text-white text-center mx-2 overflow-hidden flex-wrap">Bem vindo! {data.session.user.email?.split('@')[0]}</p>
+				<p class="text-white text-center mx-2 overflow-hidden flex-wrap">
+					Bem vindo! {data.session.user.email?.split('@')[0]}
+				</p>
 			{/if}
 		</div>
 		{#if data.session}
 			<button
 				class="bg-primary text-white rounded-sm px-2 mx-2 py-1 font-bold transition-colors hover:bg-red-400"
-				on:click={() => supabase.auth.signOut()}
+				on:click={() => handleSignOut()}
 			>
 				Sair
 			</button>
@@ -79,7 +110,6 @@
 		>
 			Ultimos Pedidos
 		</a>
-
 	</nav>
 	<!-- content here -->
 	<Transition>

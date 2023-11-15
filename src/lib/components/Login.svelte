@@ -4,17 +4,16 @@
 	import { redirect } from '@sveltejs/kit';
 	// import {supabase} from 	'$'
 
-    export let supabase:SupabaseClient
+	export let supabase: SupabaseClient;
 
 	// import type { LayoutData } from ''
 	// export let data;
 	// let { supabase } = data;
 	// $: ({ supabase } = data);
 
+	let email: string;
 
-	let email:string
-
-	let password:string
+	let password: string;
 
 	const handleSignUp = async () => {
 		const { data, error } = await supabase.auth.signUp({
@@ -33,9 +32,12 @@
 	const handleSignIn = async () => {
 		const { data, error } = await supabase.auth.signInWithPassword({
 			email,
-			password
+			password,
+
 		});
 		console.log(data, error);
+		location.reload();
+
 		// throw redirect(303, '/admin/produtos');
 	};
 
@@ -43,23 +45,29 @@
 		await supabase.auth.signOut();
 	};
 
-	
+	const loginGoogle = async () => {
+		await supabase.auth.signInWithOAuth({
+			provider: 'google',
+			options: {
+				redirectTo: `${location.origin}/auth/callback`
+			}
+		});
+	};
 </script>
 
 <main class="text-foreground bg-card p-3 rounded-sm">
-
-    <h1 class="text-black">Login admin</h1>
-	<!-- <form on:submit={handleSignUp}> -->
-	<label class="text-black" for="email">Email</label>
+	<h1 class="text-black">Login admin</h1>
+	<!-- <label class="text-black" for="email">Email</label>
 	<input name="email" bind:value={email} />
 	<label class="text-black" for="password">Senha</label>
 	<input type="password" name="password" bind:value={password} />
-	<!-- <button class="bg-red-300" on:click={handleSignUp}>Sign up</button> -->
-	<!-- </form> -->
 
 	<button class="bg-green-300" on:click={handleSignIn}>Log in</button>
 
-	<button class="bg-red-300" on:click={handleSignUp}>Sign up</button>
+	<button class="bg-red-300" on:click={handleSignUp}>Sign up</button> -->
+
+	<!-- google login -->
+	<button class="bg-blue-300" on:click={loginGoogle}>Login with Google</button>
 </main>
 
 <style>
