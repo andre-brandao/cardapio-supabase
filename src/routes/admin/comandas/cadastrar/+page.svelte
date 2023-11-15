@@ -3,9 +3,13 @@
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import type { PageData } from './$types';
 	import { maskify } from '$lib/mask';
+	import { Loader2 } from 'lucide-svelte';
 
 	export let data: PageData;
-	const { form, errors, constraints, enhance } = superForm(data.form, { taintedMessage: null });
+	const { form, errors, constraints, enhance, delayed } = superForm(data.form, {
+		taintedMessage: null,
+		delayMs: 500
+	});
 </script>
 
 <main class="flex flex-col items-center">
@@ -59,9 +63,15 @@
 		</div>
 		<div class="grid grid-cols-1 gap-4">
 			<button
+				disabled={$delayed}
 				class="p-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-green-600"
-				>Submit</button
 			>
+				{#if $delayed}
+					<Loader2 />
+				{:else}
+					Salvar
+				{/if}
+			</button>
 		</div>
 	</form>
 </main>
