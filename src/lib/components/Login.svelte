@@ -1,5 +1,6 @@
 <!-- // src/routes/auth/+page.svelte -->
 <script lang="ts">
+	import { page } from '$app/stores';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { redirect } from '@sveltejs/kit';
 	// import {supabase} from 	'$'
@@ -32,8 +33,7 @@
 	const handleSignIn = async () => {
 		const { data, error } = await supabase.auth.signInWithPassword({
 			email,
-			password,
-
+			password
 		});
 		console.log(data, error);
 		location.reload();
@@ -49,7 +49,7 @@
 		await supabase.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: `${location.origin}/auth/callback`
+				redirectTo: $page.url.origin + '/auth/callback'
 			}
 		});
 	};
