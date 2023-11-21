@@ -70,13 +70,12 @@
 </script>
 
 {#if data.cliente}
+
+<div class="flex gap-1 mx-1">
 	<CardCliente {...data.cliente} />
-	<div class="text-center bg-slate-400">
-		Total: R$ {formatPrice(total)}
-	</div>
 	<AlertDialog.Root bind:open>
 		<AlertDialog.Trigger>
-			<Button class="font-bold cursor-pointe space-x-2 bg-green-500  rounded-2xl p-3"
+			<Button class="h-full  font-bold cursor-pointe  bg-green-500  rounded-2xl "
 				>Self-Checkout</Button
 			>
 		</AlertDialog.Trigger>
@@ -117,6 +116,12 @@
 			</AlertDialog.Footer>
 		</AlertDialog.Content>
 	</AlertDialog.Root>
+	
+</div>
+	<div class="text-center p-3 font-bold mx-5 rounded-lg mt-2 bg-slate-400">
+		Total: R$ {formatPrice(total)}
+	</div>
+
 {/if}
 
 <main class="mt-5 mb-20">
