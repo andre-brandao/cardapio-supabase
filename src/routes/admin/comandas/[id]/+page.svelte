@@ -115,7 +115,7 @@
 
 {#if data.cliente}
 	<div class="flex flex-row justify-between">
-		<a class="flex flex-col " href={`/cliente/${data.cliente.id}/cardapio`}>
+		<a class="flex flex-col " target="_blank" href={`/cliente/${data.cliente.id}/cardapio`}>
 			<p>Clique aqui para adiconar um pedido</p>
 			<CardCliente {...data.cliente} />
 		</a>
