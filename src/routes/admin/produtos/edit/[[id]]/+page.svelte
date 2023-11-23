@@ -55,7 +55,7 @@
 			upsert: true
 		});
 
-		if (error) {
+		if ($form.image_url.length > 0) {
 			const { data } = await supabase.storage.from('produto_imgs').update(fileName, file, {
 				cacheControl: '3600',
 				upsert: true
