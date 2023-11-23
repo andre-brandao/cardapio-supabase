@@ -13,13 +13,16 @@
 		<Card.Title>{data.mesa}</Card.Title>
 	</Card.Header>
 </Card.Root>
-<a href={`/cardapio`}>
-	<Card.Root class="m-4 bg-green-800 text-white">
-		<Card.Header class="text-center">
-			<Card.Title>Cardapio</Card.Title>
-		</Card.Header>
-	</Card.Root>
-</a>
+
+{#if clientes.length == 0}
+	 <a href={`/cardapio`}>
+		 <Card.Root class="m-4 bg-green-800 text-white">
+			 <Card.Header class="text-center">
+				 <Card.Title>Cardapio</Card.Title>
+			 </Card.Header>
+		 </Card.Root>
+	 </a>
+{/if}
 
 <div class="text-center font-bold text-white">Faça seu Pedido em sua comanda:</div>
 {#each clientes as cliente}
