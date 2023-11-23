@@ -115,10 +115,10 @@
 
 {#if data.cliente}
 	<div class="flex flex-row justify-between">
-		<a href={`/cliente/${data.cliente.id}/cardapio`}>
+		<a class="flex flex-col " href={`/cliente/${data.cliente.id}/cardapio`}>
+			<p>Clique aqui para adiconar um pedido</p>
 			<CardCliente {...data.cliente} />
 		</a>
-
 
 		<!-- <button
 			class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
