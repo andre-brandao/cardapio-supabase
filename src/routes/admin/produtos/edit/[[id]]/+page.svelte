@@ -42,13 +42,17 @@
 		// const file = e.target.files[0];
 
 		const file = await resizeImage(e.target.files[0]);
-		previewURL = URL.createObjectURL(file);
 
+		// get file type
+		
+		previewURL = URL.createObjectURL(file);
+		console.log('previewURL: ' + previewURL);
+		
 		const fileName = generateFileName();
 		//@ts-ignore
-		const { data, error } = await supabase.storage.from('produto_imgs').update(fileName, file, {
+		const { data, error } = await supabase.storage.from('produto_imgs').upload(fileName, e.target.files[0], {
 			cacheControl: '3600',
-			upsert: false
+			upsert: true
 		});
 
 		if (error) {
