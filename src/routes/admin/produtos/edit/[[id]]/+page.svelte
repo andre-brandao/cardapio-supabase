@@ -50,7 +50,7 @@
 		
 		const fileName = generateFileName();
 		//@ts-ignore
-		const { data, error } = await supabase.storage.from('produto_imgs').upload(fileName, e.target.files[0], {
+		const { data, error } = await supabase.storage.from('produto_imgs').upload(fileName, file, {
 			cacheControl: '3600',
 			upsert: true
 		});
