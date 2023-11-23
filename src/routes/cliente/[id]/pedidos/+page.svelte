@@ -73,6 +73,37 @@
 
 <div class="flex gap-1 mx-1">
 	<CardCliente {...data.cliente} />
+	
+</div>
+	<div class="text-center p-3 font-bold mx-5 rounded-lg mt-2 bg-slate-400">
+		Total: R$ {formatPrice(total)}
+	</div>
+
+{/if}
+
+<main class="mt-5 mb-20">
+	<!-- print pedidos -->
+	{#each pedidos as pedido}
+		<div class={'m-2 rounded-sm p-1 ' + getColor(pedido.status)}>
+			<div class="grid grid-cols-2 gap-4">
+				<div>
+					<p>{pedido.produtos?.nome}</p>
+					<p>Quantidade: {pedido.quantidade}</p>
+					{#if pedido.produtos}
+						<p>Valor: R${formatPrice(pedido.total_in_cents)}</p>
+					{/if}
+					<p>Dia:{new Date(pedido.created_at).toLocaleDateString()}</p>
+					<p>Horário: {new Date(pedido.created_at).toLocaleTimeString()}</p>
+				</div>
+				<div>
+					<p>Status: {pedido.status}</p>
+					<p>Observação:{pedido.observacao}</p>
+				</div>
+			</div>
+		</div>
+	{/each}
+
+
 	<AlertDialog.Root bind:open>
 		<AlertDialog.Trigger>
 			<Button class="h-full  font-bold cursor-pointe  bg-green-500  rounded-2xl "
@@ -117,32 +148,4 @@
 		</AlertDialog.Content>
 	</AlertDialog.Root>
 	
-</div>
-	<div class="text-center p-3 font-bold mx-5 rounded-lg mt-2 bg-slate-400">
-		Total: R$ {formatPrice(total)}
-	</div>
-
-{/if}
-
-<main class="mt-5 mb-20">
-	<!-- print pedidos -->
-	{#each pedidos as pedido}
-		<div class={'m-2 rounded-sm p-1 ' + getColor(pedido.status)}>
-			<div class="grid grid-cols-2 gap-4">
-				<div>
-					<p>{pedido.produtos?.nome}</p>
-					<p>Quantidade: {pedido.quantidade}</p>
-					{#if pedido.produtos}
-						<p>Valor: R${formatPrice(pedido.total_in_cents)}</p>
-					{/if}
-					<p>Dia:{new Date(pedido.created_at).toLocaleDateString()}</p>
-					<p>Horário: {new Date(pedido.created_at).toLocaleTimeString()}</p>
-				</div>
-				<div>
-					<p>Status: {pedido.status}</p>
-					<p>Observação:{pedido.observacao}</p>
-				</div>
-			</div>
-		</div>
-	{/each}
 </main>
