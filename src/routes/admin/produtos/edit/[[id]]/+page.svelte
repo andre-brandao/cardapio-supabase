@@ -26,14 +26,14 @@
 	}
 
 	function generateFileName() {
-		if ($form.nome.length > 0) {
-			return removeSpecialCharacters($form.nome)  + '.png';
-		}
+		// if ($form.nome.length > 0) {
+		// 	return removeSpecialCharacters($form.nome) + '.png';
+		// }
 
 		const date = new Date();
 		const timestamp = date.getTime();
 		const random = Math.floor(Math.random() * 1000000);
-		const fileName = timestamp + random + '.png';
+		const fileName = removeSpecialCharacters($form.nome) + timestamp + random + '.png';
 		return fileName;
 	}
 
@@ -44,10 +44,10 @@
 		const file = await resizeImage(e.target.files[0]);
 
 		// get file type
-		
+
 		previewURL = URL.createObjectURL(file);
 		console.log('previewURL: ' + previewURL);
-		
+
 		const fileName = generateFileName();
 		//@ts-ignore
 		const { data, error } = await supabase.storage.from('produto_imgs').upload(fileName, file, {
@@ -55,15 +55,19 @@
 			upsert: true
 		});
 
-		if ($form.image_url.length > 0) {
-			const { data } = await supabase.storage.from('produto_imgs').update(fileName, file, {
+		if (error) {
+			console.error(error);
+
+			const { data: updated } = await supabase.storage.from('produto_imgs').update(fileName, file, {
 				cacheControl: '3600',
 				upsert: true
 			});
+
+			console.log(updated);
 		}
 		console.log(data, error);
 		//@ts-ignore
-		const { data: url } = await supabase.storage.from('produto_imgs').getPublicUrl(fileName);
+		const { data: url } = supabase.storage.from('produto_imgs').getPublicUrl(fileName);
 
 		$form.image_url = url.publicUrl;
 		console.log('upload concluido ' + url.publicUrl);
