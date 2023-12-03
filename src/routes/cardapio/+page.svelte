@@ -5,10 +5,27 @@
 	import type { PageData } from './$types';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { category_order } from '$lib/utils';
 
 	export let data: PageData;
 	const produtos = data.produtos ?? [];
-	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))];
+	
+	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))]
+		.sort((a, b) => {
+			const indexA = category_order.indexOf(a);
+			const indexB = category_order.indexOf(b);
+			if (indexA === -1 && indexB === -1) {
+				return a.localeCompare(b);
+			} else if (indexA === -1) {
+				return 1;
+			} else if (indexB === -1) {
+				return -1;
+			} else {
+				return indexA - indexB;
+			}
+	
+	
+	});
 
 	function produtosFrom(categoria: string) {
 		return produtos
@@ -43,6 +60,12 @@
 </script>
 
 <main class="flex flex-col">
+	<img
+	class="p-2 w-64 h-auto rounded-lg filter invert"
+	src="https://firebasestorage.googleapis.com/v0/b/svelte-cardapio.appspot.com/o/static%2Flogo-h-p.png?alt=media&token=a129a507-20ad-4b9e-887f-d7da1e831155"
+	alt=""
+/>
+
 	<Tabs.Root value={cat_selecionada}>
 		<div class="sticky top-0 z-10 p-2 bg-background">
 			<Tabs.List class="flex overflow-y-scroll">

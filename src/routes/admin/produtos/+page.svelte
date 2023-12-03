@@ -3,6 +3,7 @@
 
 	import CardProduto from '$lib/cards/CardProduto.svelte';
 	import type { PageData } from './$types';
+	import { category_order } from '$lib/utils';
 	// import { insertProdutos } from '$lib/old_produtcts';
 
 	export let data: PageData;
@@ -15,7 +16,6 @@
 	});
 
 	let search_bar = '';
-	const category_order = ['Para Compartilhar', 'Massas', 'Pratos Quentes'];
 
 	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))]
 	.sort((a, b) => {

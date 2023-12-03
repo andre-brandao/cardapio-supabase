@@ -65,3 +65,6 @@ export function formatPrice(price:number) {
     return (price / 100).toFixed(2);
 }
 
+
+export const category_order = ['Para Compartilhar', 'Massas', 'Pratos Quentes', 'Sanduiche'];
+

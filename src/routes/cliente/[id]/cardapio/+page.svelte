@@ -5,11 +5,11 @@
 	import type { PageData } from './$types';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { category_order } from '$lib/utils';
 
 	export let data: PageData;
 	const produtos = data.produtos ?? [];
 
-	const category_order = ['Para Compartilhar', 'Massas', 'Pratos Quentes', 'Sanduiche'];
 	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))]
 		.sort((a, b) => {
 			const indexA = category_order.indexOf(a);
