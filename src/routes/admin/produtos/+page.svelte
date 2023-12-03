@@ -15,8 +15,24 @@
 	});
 
 	let search_bar = '';
+	const category_order = ['Para Compartilhar', 'Massas', 'Pratos Quentes'];
 
-	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))];
+	$: categorias = [...new Set(produtos.map((prod) => prod.categoria))]
+	.sort((a, b) => {
+			const indexA = category_order.indexOf(a);
+			const indexB = category_order.indexOf(b);
+			if (indexA === -1 && indexB === -1) {
+				return a.localeCompare(b);
+			} else if (indexA === -1) {
+				return 1;
+			} else if (indexB === -1) {
+				return -1;
+			} else {
+				return indexA - indexB;
+			}
+	
+	
+	});
 
 	function produtosFrom(categoria: string) {
 		return produtos

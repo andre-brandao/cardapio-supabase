@@ -196,6 +196,11 @@
 	<div class="w-[350px]">
 		<CardProduto {...$form} />
 	</div>
+
+	{#if $errors}
+	<h1>{JSON.stringify($errors)}</h1>
+
+	{/if}
 	<div class="grid grid-cols-4 text-right gap-4 pb-10">
 		<!-- <SuperDebug data={$form} /> -->
 		<img
